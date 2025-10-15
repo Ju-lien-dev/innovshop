@@ -1,4 +1,3 @@
-
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php
@@ -25,3 +24,29 @@
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
+
+.env
+.env.test
+.env.dev
+.env.prod
+
+# Pour proteger les fichiers téléchargés
+/public/uploads/
+/public/images/uploads/
+/public/images/products/
+/public/temp/
+
+/.idea/
+/.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+
+/logs/
+*.log
+
+/package-lock.json
+/yarn.lock
+
+/var/cache/
+/var/log/
