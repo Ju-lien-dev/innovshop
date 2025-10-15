@@ -1,0 +1,398 @@
+{# templates/cart/index.html.twig #}
+{% extends 'base.html.twig' %}
+{% block title %}Mon panier{% endblock %}
+
+{% block body %}
+{# —— Calculs (serveur) —— #}
+{% set total = 0 %}
+{% set totalQty = 0 %}
+{% if items.id is defined and items.id is not empty %}
+{% for i in 0..(items.id|length - 1) %}
+{% set total = total + (items.prix[i] * items.quantite[i]) %}
+{% set totalQty = totalQty + items.quantite[i] %}
+{% endfor %}
+{% endif %}
+
+<style>
+  /* ===== Panier (scopé) ===== */
+  #cartfx {
+    --ink: #111827;
+    --muted: #6b7280;
+    --bg: #ffffff;
+    /* fond blanc partout */
+    --border: rgba(17, 24, 39, .10);
+    --shadow: 0 16px 40px rgba(2, 6, 23, .08);
+    color: var(--ink);
+    background: var(--bg);
+  }
+
+  #cartfx .wrap {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 0 16px;
+  }
+
+  #cartfx .shell {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 20px;
+  }
+
+  @media (max-width: 992px) {
+    #cartfx .shell {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .background {
+    background-color: #fff;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+  }
+
+  /* cartes blanches */
+  #cartfx .card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+  }
+
+  /* ——— bloc gauche ——— */
+  #cartfx .head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px 10px;
+  }
+
+  #cartfx .head h4 {
+    margin: 0;
+    font-weight: 800;
+    letter-spacing: .2px;
+  }
+
+  #cartfx .count-pill {
+    font-size: .85rem;
+    color: var(--ink);
+    background: #f3f4f6;
+    border: 1px solid var(--border);
+    padding: 6px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  #cartfx .list {
+    padding: 8px 10px 14px;
+  }
+
+  /* ligne produit en CSS Grid avec zones → hyper responsive */
+  #cartfx .line {
+    display: grid;
+    grid-template-columns: 72px 1fr auto auto;
+    grid-template-areas:
+      "img info qty price"
+      ".   rm   rm  rm";
+    align-items: center;
+    gap: 12px;
+    padding: 14px;
+    border-top: 1px dashed var(--border);
+  }
+
+  #cartfx .line:first-child {
+    border-top: 0;
+  }
+
+  @media (max-width: 640px) {
+    #cartfx .line {
+      grid-template-columns: 64px 1fr auto;
+      grid-template-areas:
+        "img info price"
+        ".   qty  qty"
+        ".   rm   rm";
+    }
+  }
+
+  @media (max-width: 420px) {
+    #cartfx .line {
+      grid-template-columns: 56px 1fr;
+      grid-template-areas:
+        "img info"
+        "qty qty"
+        "price price"
+        "rm rm";
+    }
+  }
+
+  #cartfx .c-img {
+    grid-area: img;
+  }
+
+  #cartfx .c-info {
+    grid-area: info;
+  }
+
+  #cartfx .c-qty {
+    grid-area: qty;
+    justify-self: start;
+  }
+
+  #cartfx .c-price {
+    grid-area: price;
+    justify-self: end;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  #cartfx .c-rm {
+    grid-area: rm;
+    justify-self: end;
+  }
+
+  #cartfx .thumb {
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+    object-fit: cover;
+    border: 1px solid var(--border);
+    background: #f3f4f6;
+  }
+
+  #cartfx .title {
+    font-weight: 600;
+  }
+
+  #cartfx .ref {
+    color: var(--muted);
+    font-size: .86rem;
+    margin-top: 2px;
+  }
+
+  /* quantité */
+  #cartfx .qty {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid var(--border);
+    padding: 8px 10px;
+    border-radius: 999px;
+    background: #f9fafb;
+  }
+
+  #cartfx .qty a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #fff;
+    border: 1px solid var(--border);
+    text-decoration: none;
+    color: var(--ink);
+  }
+
+  #cartfx .qty a:hover {
+    background: #f3f4f6;
+    text-decoration: none;
+  }
+
+  /* bouton supprimer */
+  #cartfx .rm form {
+    display: inline;
+  }
+
+  #cartfx .rm button {
+    border: 1px solid var(--border);
+    background: #fff;
+    color: var(--ink);
+    padding: 8px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background 0.2s;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    border: 1px solid #333;
+    animation: fadeInUp 1s ease-out forwards;
+    animation-delay: 1s;
+  }
+
+  #cartfx .rm button:hover {
+    background: #333;
+    color: #fff;
+  }
+
+  /* pied gauche */
+  #cartfx .foot {
+    padding: 12px 16px 18px;
+    border-top: 1px dashed var(--border);
+  }
+
+  #cartfx .back {
+    color: var(--muted);
+    text-decoration: none;
+  }
+
+  #cartfx .back:hover {
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  /* ——— bloc résumé ——— */
+  #cartfx .sum {
+    padding: 14px;
+  }
+
+  #cartfx .sum h5 {
+    margin: 6px 6px 10px;
+    font-weight: 800;
+  }
+
+  #cartfx .sum-box {
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 12px;
+    background: #fff;
+  }
+
+  #cartfx .sum-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    padding: 10px 6px;
+    border-bottom: 1px dashed var(--border);
+  }
+
+  #cartfx .sum-row:last-child {
+    border-bottom: 0;
+  }
+
+  #cartfx .sum-row .label {
+    color: var(--muted);
+  }
+
+  #cartfx .sum-row .value {
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  #cartfx .sum-btn {
+    display: block;
+    width: 100%;
+    margin-top: 14px;
+    padding: 14px 16px;
+    background: #111827;
+    color: #fff;
+    text-align: center;
+    border-radius: 25px;
+    text-decoration: none;
+    transition: background 0.2s;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    border: 1px solid #333;
+    animation: fadeInUp 1s ease-out forwards;
+    animation-delay: 1s;
+
+  }
+
+  #cartfx .sum-btn:hover {
+    filter: brightness(.96);
+    text-decoration: none;
+    color: #333;
+    background: #ffffff;
+    border: 1px solid #333;
+  }
+</style>
+
+<div class="background"></div>
+
+<div id="cartfx">
+  <div class="wrap">
+    <div class="shell">
+
+      {# ——— Colonne gauche : produits ——— #}
+      <section class="card">
+        <div class="head">
+          <h4>Mon panier</h4>
+          <span class="count-pill">
+            {% if totalQty == 0 %}Aucun article{% else %}{{ totalQty }} article{{ totalQty > 1 ? 's' }}{% endif %}
+          </span>
+        </div>
+
+        <div class="list">
+          {% if items.id is empty %}
+          <div style="padding: 18px;">
+            <h5 style="margin:0 0 6px;">Votre panier est vide</h5>
+            <div class="text-muted">Partez à la découverte de nos produits et revenez ici pour commander.</div>
+          </div>
+          {% else %}
+          {% for i in 0..(items.id|length - 1) %}
+          <div class="line">
+            <div class="c-img">
+              <img class="thumb" src="{{ asset('images/' ~ (items.image[i]|default('default.png'))) }}"
+                alt="{{ items.nom_produit[i]|default('Produit') }}">
+            </div>
+
+            <div class="c-info">
+              <div class="title">{{ items.nom_produit[i] }}</div>
+              <div class="ref">Réf.&nbsp;#{{ items.id[i] }}</div>
+            </div>
+
+            <div class="c-qty">
+              <div class="qty">
+                <a href="{{ path('app_cart_decrement', {'id': items.id[i]}) }}" aria-label="Diminuer">−</a>
+                <span>{{ items.quantite[i] }}</span>
+                <a href="{{ path('app_cart_increment', {'id': items.id[i]}) }}" aria-label="Augmenter">+</a>
+              </div>
+            </div>
+
+            <div class="c-price">
+              {{ (items.prix[i] * items.quantite[i] / 100)
+              |number_format(2, '.', ' ')
+              |replace({' ': '&nbsp;'})|raw }}&nbsp;€
+            </div>
+
+            <div class="c-rm rm">
+              <form method="post" action="{{ path('app_cart_delete', {'id': items.id[i]}) }}">
+                <button type="submit">Supprimer</button>
+              </form>
+            </div>
+          </div>
+          {% endfor %}
+          {% endif %}
+        </div>
+
+        <div class="foot">
+          <a class="back" href="{{ path('app_catalogue') }}">↩ Continuer mes achats</a>
+        </div>
+      </section>
+
+      {# ——— Colonne droite : résumé ——— #}
+      <aside class="card sum">
+        <h5>Résumé</h5>
+        <div class="sum-box">
+          <div class="sum-row">
+            <div class="label">Articles</div>
+            <div class="value">{{ totalQty }}</div>
+          </div>
+          <div class="sum-row" style="font-weight:700;">
+            <div class="label">Total</div>
+            <div class="value" id="total-price">
+              {{ (total/100)|number_format(2, '.', ' ')|replace({' ': '&nbsp;'})|raw }}&nbsp;€
+            </div>
+          </div>
+        </div>
+        <form action="{{ path('app_checkout_review') }}" method="GET">
+          <button class="sum-btn" type="submit">Finaliser mon achat</button>
+        </form>
+        <!-- <form action="/create-checkout-session" method="POST">
+          <button class="sum-btn" type="submit">Procéder au paiement</button>
+        </form> -->
+      </aside>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

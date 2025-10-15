@@ -1,0 +1,32 @@
+<!-- email envoyé aux client pour confirmer sa commande  -->
+
+{# templates/emails/order_confirmation.html.twig #}
+<h2>✅ Confirmation de votre commande #{{ order.reference }}</h2>
+<p>Bonjour {{ order.user.prenom ?? order.user.email }},</p>
+<p>Merci pour votre achat ! Votre commande a bien été enregistrée le {{ order.createdAt|date('d/m/Y H:i') }}.</p>
+
+<p><strong>Total :</strong> {{ order.total|number_format(2, '.', ' ') }} €</p>
+<p><strong>Statut :</strong>
+    {% if order.status == 'paid' %}Confirmée
+    {% elseif order.status == 'processing' %}En préparation
+    {% elseif order.status == 'shipped' %}Expédiée
+    {% elseif order.status == 'delivered' %}Livrée
+    {% else %}{{ order.status|capitalize }}
+    {% endif %}
+</p>
+
+{% if shipMeta.ship_name %}
+<p><strong>Adresse de livraison :</strong><br>
+    {{ shipMeta.ship_name }}<br>
+    {{ shipMeta.ship_addr }}<br>
+    {{ shipMeta.ship_zip }} {{ shipMeta.ship_city }} ({{ shipMeta.ship_ctry }})</p>
+{% endif %}
+
+<h3>Détails</h3>
+<ul>
+    {% for item in order.articles %}
+    <li>{{ item.nomProduit }} × {{ item.quantite }} — {{ item.sousTotal|number_format(2, '.', ' ') }} €</li>
+    {% endfor %}
+</ul>
+
+<p>Vous pouvez retrouver vos commandes dans votre espace compte.</p>

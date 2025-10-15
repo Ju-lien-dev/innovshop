@@ -1,0 +1,181 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+<style>
+    .account-future {
+        --af-bg: #ffffff;
+        --af-text: #1f2937;
+        --af-muted: #6b7280;
+        --af-card: rgb(243, 241, 238);
+        --af-border: rgba(17, 24, 39, .08);
+        --af-buttons: #333;
+        color: var(--af-text)
+    }
+
+    body {
+        background: var(--af-bg)
+    }
+
+    .af-shell {
+        max-width: 1100px;
+        margin: 48px auto;
+        padding: 24px
+    }
+
+    .af-card {
+        background: #fff;
+        border: 1px solid var(--af-border);
+        border-radius: 18px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, .15)
+    }
+
+    .af-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 22px;
+        border-bottom: 1px solid var(--af-border);
+        background: var(--af-card);
+        border-radius: 18px 18px 0 0
+    }
+
+    .af-header h1 {
+        font-size: 1.35rem;
+        margin: 0
+    }
+
+    .af-panel {
+        padding: 18px
+    }
+
+    .af-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px
+    }
+
+    @media(max-width:768px) {
+        .af-grid {
+            grid-template-columns: 1fr
+        }
+    }
+
+    .af-row-full {
+        grid-column: 1/-1
+    }
+
+    .account-future .form-control {
+        background: #f8fafc;
+        border: 1px solid #e5e7eb;
+        color: var(--af-text);
+        border-radius: 12px;
+        padding: 10px 14px
+    }
+
+    .account-future .form-control:focus {
+        background: #fff;
+        border-color: rgba(6, 182, 212, .5);
+        box-shadow: 0 8px 24px rgba(2, 6, 23, .05)
+    }
+
+    .af-actions {
+        display: flex;
+        gap: 12px;
+        justify-content: flex-end;
+        margin-top: 12px
+    }
+
+    .af-btn {
+        border: 1px solid var(--af-border);
+        color: #fff;
+        background: var(--af-buttons);
+        padding: 10px 16px;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: .18s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px
+    }
+
+    .af-btn:hover {
+        border: 1px solid #333;
+        background: #fff;
+        color: var(--af-text);
+        transform: translateY(-1px);
+        box-shadow: 0 8px 24px rgba(2, 6, 23, .05)
+    }
+
+    .af-btn.outline {
+        background: #fff;
+        color: var(--af-text)
+    }
+
+    .af-help {
+        color: var(--af-muted);
+        font-size: .92rem;
+        margin-top: 2px
+    }
+</style>
+
+<div class="account-future">
+    <div class="af-shell">
+        <div class="af-card">
+            <div class="af-header">
+                <h1>{{ title }}</h1>
+                <a href="{{ path('app_account') }}" class="af-btn outline">← Retour à mon compte</a>
+            </div>
+
+            <div class="af-panel">
+                {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+                {# Affiche les erreurs globales éventuelles #}
+                {{ form_errors(form) }}
+
+                <div class="af-grid">
+                    <div>
+                        {{ form_label(form.type, 'Type d’adresse') }}
+                        {{ form_widget(form.type, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.type) }}
+                    </div>
+
+                    <div>
+                        {{ form_label(form.nom, 'Nom complet') }}
+                        {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.nom) }}
+                    </div>
+
+                    <div class="af-row-full">
+                        {{ form_label(form.adresse, 'Adresse') }}
+                        {{ form_widget(form.adresse, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.adresse) }}
+                        <div class="af-help">Numéro, rue, complément…</div>
+                    </div>
+
+                    <div>
+                        {{ form_label(form.codePostal, 'Code postal') }}
+                        {{ form_widget(form.codePostal, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.codePostal) }}
+                    </div>
+
+                    <div>
+                        {{ form_label(form.ville, 'Ville') }}
+                        {{ form_widget(form.ville, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.ville) }}
+                    </div>
+                </div>
+
+                <div class="af-actions">
+                    <a href="{{ path('app_account') }}" class="af-btn outline">Annuler</a>
+                    <button type="submit" class="af-btn">Enregistrer</button>
+                </div>
+
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

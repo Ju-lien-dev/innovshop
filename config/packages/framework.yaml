@@ -1,6 +1,7 @@
 # see https://symfony.com/doc/current/reference/configuration/framework.html
 framework:
-    secret: '%env(APP_SECRET)%'
+    secret: "%env(APP_SECRET)%"
+    error_controller: App\Controller\ErrorController
 
     # Note that the session will be started ONLY if you read or write from it.
     session: true
@@ -10,6 +11,8 @@ framework:
 
 when@test:
     framework:
+        default_locale: fr
+        translator: { fallbacks: ["fr"] }
         test: true
         session:
             storage_factory_id: session.storage.factory.mock_file

@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commandes{% endblock %}
+
+{% block body %}
+<h1>Commandes</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Référence</th>
+            <th>Date</th>
+            <th>Client</th>
+            <th>Total</th>
+            <th>Statut</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for o in orders %}
+        <tr>
+            <td>{{ o.id }}</td>
+            <td>{{ o.reference }}</td>
+            <td>{{ o.createdAt|date('d/m/Y H:i') }}</td>
+            <td>
+                {% if o.user %}
+                {{ o.user.prenom ~ ' ' ~ o.user.nom ?: o.user.email }}
+                {% else %}
+                —
+                {% endif %}
+            </td>
+            <td>{{ o.total|number_format(2, '.', ' ') }} €</td>
+            <td>{{ o.status }}</td>
+            <td>
+                <a class="btn btn-sm btn-primary" href="{{ path('admin_orders_show', {id: o.id}) }}">Détail</a>
+                {# Exemple de bouton “quick status” (optionnel) :
+                <form method="post" action="{{ path('admin_orders_quick_status', {id:o.id, status:'processing'}) }}"
+                    style="display:inline;">
+                    <input type="hidden" name="_token" value="{{ csrf_token('order_quick_status_' ~ o.id) }}">
+                    <button class="btn btn-sm btn-outline-secondary">Passer en préparation</button>
+                </form>
+                #}
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="7" class="text-center">Aucune commande</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

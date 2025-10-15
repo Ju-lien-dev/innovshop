@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Livraison & Paiements{% endblock %}
+
+{% block body %}
+{% include 'service_client/_style_block.html.twig' %}
+
+<div class="background"></div>
+
+<section class="page-hero">
+    <div class="container">
+        <nav class="breadcrumb-sm mb-2">
+            <a href="{{ path('app_front') }}">Accueil</a> · <span class="muted">Livraison & paiements</span>
+        </nav>
+        <h1>Livraison & Paiements</h1>
+        <p class="muted mb-0">Informations essentielles pour vos commandes.</p>
+    </div>
+</section>
+
+<div class="container">
+    <div class="grid grid-2">
+        <!-- Colonne principale -->
+        <div class="grid">
+            <article class="card">
+                <div class="card-hd">
+                    <h2>Modes de livraison</h2>
+                </div>
+                <div class="card-bd">
+                    <p>Nous livrons partout en France métropolitaine via Colissimo et Chronopost.</p>
+                    <p>La livraison est offerte dès 100 € d’achat.</p>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-hd">
+                    <h2>Délais</h2>
+                </div>
+                <div class="card-bd">
+                    <p>Le délai moyen de livraison est de <strong>2 à 5 jours ouvrés</strong> après expédition.</p>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-hd">
+                    <h2>Modes de paiement</h2>
+                </div>
+                <div class="card-bd">
+                    <ul>
+                        <li>Carte bancaire (Visa, MasterCard, CB)</li>
+                        <li>PayPal</li>
+                        <li>Autres moyens indiqués au moment de la commande</li>
+                    </ul>
+                </div>
+            </article>
+        </div>
+
+        <!-- Colonne latérale -->
+        <aside class="grid">
+            <div class="card">
+                <div class="card-hd">
+                    <h2>Récapitulatif</h2>
+                </div>
+                <div class="card-bd">
+                    <ul class="kv">
+                        <li><span class="muted">Site</span>
+                            <div>{{ app.request.schemeAndHttpHost }}</div>
+                        </li>
+                        <li><span class="muted">Entreprise</span>
+                            <div>InnovShop SAS</div>
+                        </li>
+                        <li><span class="muted">Contact</span>
+                            <div><a class="link" href="mailto:support@innovshop.fr">support@innovshop.fr</a></div>
+                        </li>
+                    </ul>
+                    <div class="hr"></div>
+                    <p class="muted mb-0">Voir aussi :
+                        <a class="link" href="{{ path('service_contact') }}">Contact</a> ·
+                        <a class="link" href="{{ path('service_retours_retractation') }}">Retours</a>
+                    </p>
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
+{% endblock %}

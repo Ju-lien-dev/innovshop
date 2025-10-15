@@ -1,0 +1,349 @@
+{# templates/pages/cgv.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Conditions Générales de Vente{% endblock %}
+
+{% block body %}
+<style>
+    :root {
+        --card-bg: #fff;
+        --card-bd: #e5e7eb;
+        --text-muted: #6b7280;
+        --radius: 12px;
+        --shadow: 0 1px 2px rgba(0, 0, 0, .05);
+        --brand: #0ea5e9;
+        /* ajuste si besoin */
+    }
+
+    .background {
+        background-color: #fff;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        overflow: hidden;
+    }
+
+
+
+    .page-hero h1 {
+        margin: 0;
+        font-weight: 800;
+        letter-spacing: .2px;
+    }
+
+    .breadcrumb-sm a {
+        color: var(--text-muted);
+        text-decoration: none;
+    }
+
+    .breadcrumb-sm a:hover {
+        text-decoration: underline;
+    }
+
+    .grid {
+        display: grid;
+        gap: 16px;
+    }
+
+    @media (min-width:992px) {
+        .grid-2 {
+            grid-template-columns: 2fr 1fr;
+        }
+    }
+
+    .card {
+        background: var(--card-bg);
+        border: 1px solid var(--card-bd);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+    }
+
+    .card .card-hd {
+        padding: 14px 16px 0;
+    }
+
+    .card .card-bd {
+        padding: 16px;
+    }
+
+    .card h2 {
+        font-size: 1.25rem;
+        margin: 0 0 8px;
+    }
+
+    .hr {
+        height: 1px;
+        background: var(--card-bd);
+        margin: 16px 0;
+    }
+
+    .muted {
+        color: var(--text-muted);
+    }
+
+    .kv {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kv li {
+        display: grid;
+        grid-template-columns: 180px 1fr;
+        gap: 12px;
+        padding: 6px 0;
+    }
+
+    .callout {
+        border-left: 3px solid var(--brand);
+        background: #f8fafc;
+        border-radius: 8px;
+        padding: 12px 14px;
+        font-size: .95rem;
+    }
+
+    a.link {
+        color: var(--brand);
+        text-decoration: none;
+    }
+
+    a.link:hover {
+        text-decoration: underline;
+    }
+
+    @media print {
+        .page-hero {
+            background: none;
+            border: 0;
+            padding: 0 0 8px
+        }
+
+        .card {
+            box-shadow: none
+        }
+
+        .no-print {
+            display: none !important
+        }
+    }
+</style>
+<div class="background"></div>
+
+<section class="page-hero">
+    <div class="container">
+        <nav class="breadcrumb-sm mb-2">
+            <a href="{{ path('app_front') }}">Accueil</a> · <span class="muted">CGV</span>
+        </nav>
+        <h1>Conditions Générales de Vente</h1>
+        <p class="muted mb-0">Applicables à toutes les ventes conclues sur {{ app.request.schemeAndHttpHost }}.</p>
+    </div>
+</section>
+
+<div class="container">
+    <div class="grid grid-2">
+        {# Colonne principale #}
+        <div class="grid">
+
+            <article class="card">
+                <div class="card-bd">
+                    <p>
+                        Les présentes CGV s’appliquent entre <strong>InnovShop SAS</strong> et tout client effectuant un
+                        achat sur
+                        <strong>{{ app.request.schemeAndHttpHost }}</strong>. En passant commande, vous acceptez
+                        pleinement ces conditions.
+                    </p>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-hd">
+                    <h2>1. Identification de l’entreprise</h2>
+                </div>
+                <div class="card-bd">
+                    <ul class="kv">
+                        <li><span class="muted">Raison sociale</span>
+                            <div><strong>InnovShop SAS</strong></div>
+                        </li>
+                        <li><span class="muted">Siège social</span>
+                            <div>12 rue de l’Exemple, 75000 Paris, France</div>
+                        </li>
+                        <li><span class="muted">SIREN / RCS</span>
+                            <div>123 456 789 — RCS Paris</div>
+                        </li>
+                        <li><span class="muted">TVA intracom</span>
+                            <div>FRXX123456789</div>
+                        </li>
+                        <li><span class="muted">Contact</span>
+                            <div><a class="link" href="mailto:support@innovshop.fr">support@innovshop.fr</a> · +33 1 23
+                                45 67 89</div>
+                        </li>
+                    </ul>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-hd">
+                    <h2>2. Produits</h2>
+                </div>
+                <div class="card-bd">
+                    <p>Les produits présentés sont disponibles dans la limite des stocks. Chaque fiche article comprend
+                        un descriptif et un prix TTC.</p>
+                    <div class="callout mt-2">Les visuels peuvent différer légèrement du produit final (éclairage,
+                        écran, retouches).</div>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-hd">
+                    <h2>3. Prix</h2>
+                </div>
+                <div class="card-bd">
+                    <p>Les prix sont exprimés en euros, toutes taxes comprises. Les frais de livraison sont indiqués
+                        avant validation du paiement.</p>
+                    <p>InnovShop peut modifier ses prix à tout moment, mais la commande est facturée au tarif affiché
+                        lors de son enregistrement.</p>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-hd">
+                    <h2>4. Commandes</h2>
+                </div>
+                <div class="card-bd">
+                    <p>Toute commande vaut acceptation des prix, caractéristiques et des CGV. La validation intervient
+                        après confirmation du paiement.</p>
+                    <p>InnovShop se réserve le droit d’annuler toute commande en cas d’anomalie manifeste (fraude,
+                        erreur de prix évidente, etc.).</p>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-hd">
+                    <h2>5. Paiement</h2>
+                </div>
+                <div class="card-bd">
+                    <p>Paiement à la commande (carte bancaire via prestataire sécurisé, et autres moyens proposés le cas
+                        échéant).</p>
+                    <div class="callout mt-2">Les transactions sont traitées par notre partenaire de paiement et ne
+                        transitent pas par nos serveurs.</div>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-hd">
+                    <h2>6. Livraison</h2>
+                </div>
+                <div class="card-bd">
+                    <p>Livraison à l’adresse indiquée lors de la commande. Les délais sont indicatifs et peuvent varier
+                        selon le transporteur.</p>
+                    <p>En cas de colis endommagé, émettez des réserves précises auprès du transporteur et contactez-nous
+                        sous 48 h.</p>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-hd">
+                    <h2>7. Droit de rétractation (14 jours)</h2>
+                </div>
+                <div class="card-bd">
+                    <p>Vous disposez de <strong>14 jours</strong> à réception pour exercer votre droit de rétractation,
+                        sans motif ni pénalité.</p>
+                    <p>Les produits doivent être retournés neufs, complets et dans leur emballage d’origine.</p>
+                    <p>Pour initier un retour, écrivez à <a class="link"
+                            href="mailto:support@innovshop.fr">support@innovshop.fr</a>.</p>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-hd">
+                    <h2>8. Garanties & retours</h2>
+                </div>
+                <div class="card-bd">
+                    <p>Les produits bénéficient de la garantie légale de conformité et de la garantie contre les vices
+                        cachés.</p>
+                    <p>En cas de non-conformité, contactez-nous pour prise en charge et modalités de retour/échange.</p>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-hd">
+                    <h2>9. Responsabilité</h2>
+                </div>
+                <div class="card-bd">
+                    <p>InnovShop ne saurait être tenue responsable des dommages résultant d’une mauvaise utilisation des
+                        produits ou de causes externes (transport, force majeure, etc.).</p>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-hd">
+                    <h2>10. Droit applicable & litiges</h2>
+                </div>
+                <div class="card-bd">
+                    <p>Les CGV sont soumises au droit français. À défaut de résolution amiable, les tribunaux français
+                        seront compétents.</p>
+                </div>
+            </article>
+
+            <article class="card no-print">
+                <div class="card-bd">
+                    <button class="btn btn-outline-secondary w-100" onclick="window.print()">Imprimer les CGV</button>
+                </div>
+            </article>
+        </div>
+
+        {# Colonne latérale #}
+        <aside class="grid">
+            <div class="card">
+                <div class="card-hd">
+                    <h2>Récapitulatif</h2>
+                </div>
+                <div class="card-bd">
+                    <ul class="kv">
+                        <li><span class="muted">Site</span>
+                            <div>{{ app.request.schemeAndHttpHost }}</div>
+                        </li>
+                        <li><span class="muted">Vendeur</span>
+                            <div>InnovShop SAS</div>
+                        </li>
+                        <li><span class="muted">Email support</span>
+                            <div><a class="link" href="mailto:support@innovshop.fr">support@innovshop.fr</a></div>
+                        </li>
+                    </ul>
+                    <div class="hr"></div>
+                    <p class="muted mb-0">Besoin d’aide ? Consultez la <a class="link"
+                            href="{{ path('confidentialite') }}">Politique de confidentialité</a> ou la page <a
+                            class="link">Contact</a>.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-hd">
+                    <h2>Liens utiles</h2>
+                </div>
+                <div class="card-bd">
+                    <ul class="mb-0" style="padding-left:18px;">
+                        <li><a class="link" href="{{ path('mentions_legales') }}">Mentions légales</a></li>
+                        <li><a class="link" href="{{ path('confidentialite') }}">Politique de confidentialité</a></li>
+                        <li><a class="link">Nous contacter</a></li>
+                    </ul>
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
+
+{# Données structurées basiques (SEO) #}
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"WebPage",
+  "name":"Conditions Générales de Vente",
+  "publisher":{"@type":"Organization","name":"InnovShop"},
+  "url":"{{ app.request.schemeAndHttpHost }}"
+}
+</script>
+{% endblock %}

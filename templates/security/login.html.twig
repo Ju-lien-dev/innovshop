@@ -1,0 +1,470 @@
+{# templates/security/login.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    /* Palette cohérente avec le site */
+    :root {
+        --ink: #333;
+        /* texte principal & CTA */
+        --ink-soft: #555;
+        /* labels / texte secondaire */
+        --muted: #777;
+        /* onglets inactifs */
+        --bg-soft: rgb(243, 241, 238);
+        /* fond panneaux */
+        --border: #e8e8e8;
+        /* traits et bordures */
+        --focus: rgba(51, 51, 51, .16);
+        /* halo focus */
+        --placeholder: #9aa0a6;
+        /* placeholders */
+        --shadow: 0 12px 15px rgba(0, 0, 0, .24), 0 17px 50px rgba(0, 0, 0, .19);
+    }
+
+    .background {
+        background-color: #fff;
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        overflow: hidden;
+    }
+
+    .row {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+    }
+
+    body {
+        margin: 0;
+        color: var(--ink-soft);
+        background: #c8c8c8;
+        font: 600 16px/18px 'Open Sans', sans-serif;
+    }
+
+    .card {
+        width: 500px;
+        left: 100px;
+        background: transparent;
+        border: none;
+    }
+
+    .login-box {
+        width: 100%;
+        margin: auto;
+        max-width: 525px;
+        min-height: 670px;
+        position: relative;
+        background: url(https://images.unsplash.com/photo-1507208773393-40d9fc670acf?ixlib=rb-1.2.1&auto=format&fit=crop&w=1268&q=80) no-repeat center/cover;
+        box-shadow: var(--shadow);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .login-snip {
+        position: absolute;
+        inset: 0;
+        padding: 90px 70px 50px 70px;
+        background: var(--bg-soft);
+        color: var(--ink);
+    }
+
+    /* Onglets */
+    .login-snip .tab {
+        color: var(--muted);
+        font-size: 22px;
+        margin: 0 15px 10px 0;
+        padding-bottom: 5px;
+        display: inline-block;
+        border-bottom: 2px solid transparent;
+        cursor: pointer;
+    }
+
+    .login-snip .sign-in:checked+.tab,
+    .login-snip .sign-up:checked+.tab {
+        color: var(--ink);
+        border-color: var(--ink);
+        /* soulignement #333 */
+    }
+
+    /* Panneaux */
+    .login-snip .login,
+    .login-snip .sign-up-form {
+        position: absolute;
+        inset: 0;
+        transform: rotateY(180deg);
+        backface-visibility: hidden;
+        transition: all .4s linear;
+    }
+
+    .login-snip .sign-in,
+    .login-snip .sign-up,
+    .login-space .group .check {
+        display: none;
+    }
+
+    .login-snip .sign-in:checked+.tab+.sign-up+.tab+.login-space .login {
+        transform: rotate(0);
+    }
+
+    .login-snip .sign-up:checked+.tab+.login-space .sign-up-form {
+        transform: rotate(0);
+    }
+
+    .login-space {
+        min-height: 345px;
+        position: relative;
+        perspective: 1000px;
+        transform-style: preserve-3d;
+    }
+
+    .login-space .group {
+        margin-bottom: 15px;
+    }
+
+    /* Champs & labels */
+    .login-space .group .label {
+        width: 100%;
+        display: block;
+        color: var(--ink-soft);
+        font-size: 12px;
+    }
+
+    .login-space .group .input {
+        width: 100%;
+        display: block;
+        color: var(--ink);
+        padding: 15px 20px;
+        border-radius: 25px;
+        background: #fff;
+        border: 1px solid var(--border);
+        transition: box-shadow .15s ease, border-color .15s ease;
+    }
+
+    .login-space .group input[data-type="password"] {
+        text-security: circle;
+        -webkit-text-security: circle;
+    }
+
+    .login-space .group .input:focus {
+        outline: none;
+        border-color: var(--ink);
+        box-shadow: 0 0 0 3px var(--focus);
+    }
+
+    ::placeholder {
+        color: var(--placeholder);
+    }
+
+    /* CTA */
+    .login-space .group .button {
+        width: 100%;
+        display: block;
+        color: #fff;
+        text-transform: uppercase;
+        padding: 15px 20px;
+        border: none;
+        border-radius: 25px;
+        background: var(--ink);
+        transition: filter .15s ease, transform .06s ease;
+        cursor: pointer;
+    }
+
+    .login-space .group .button:hover {
+        filter: brightness(1.06);
+    }
+
+    .login-space .group .button:active {
+        transform: translateY(1px);
+    }
+
+    /* Checkbox custom */
+    .login-space .group label .icon {
+        width: 15px;
+        height: 15px;
+        border-radius: 2px;
+        position: relative;
+        display: inline-block;
+        background: #fff;
+        border: 1px solid var(--border);
+    }
+
+    .login-space .group label .icon:before,
+    .login-space .group label .icon:after {
+        content: '';
+        position: absolute;
+        background: #fff;
+        transition: all .2s ease-in-out;
+        width: 10px;
+        height: 2px;
+        left: 2px;
+    }
+
+    .login-space .group label .icon:before {
+        bottom: 6px;
+        width: 5px;
+        transform: scale(0) rotate(0);
+    }
+
+    .login-space .group label .icon:after {
+        top: 6px;
+        right: 2px;
+        transform: scale(0) rotate(0);
+    }
+
+    .login-space .group .check:checked+label {
+        color: var(--ink);
+    }
+
+    .login-space .group .check:checked+label .icon {
+        background: var(--ink);
+        border-color: var(--ink);
+    }
+
+    .login-space .group .check:checked+label .icon:before {
+        transform: scale(1) rotate(45deg);
+    }
+
+    .login-space .group .check:checked+label .icon:after {
+        transform: scale(1) rotate(-45deg);
+    }
+
+    .hr {
+        height: 2px;
+        margin: 60px 0 50px;
+        background: rgba(0, 0, 0, .06);
+    }
+
+    .foot {
+        text-align: center;
+        color: var(--ink);
+    }
+
+    /* ======= RWD ======= */
+    @media (max-width:1200px) {
+        .login-snip {
+            padding: 70px 54px 46px;
+        }
+    }
+
+    @media (max-width:992px) {
+        .row {
+            padding: 0 12px;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 560px;
+            left: auto;
+            margin: 0 auto;
+        }
+
+        .login-box {
+            min-height: 620px;
+        }
+
+        .login-snip {
+            padding: 56px 40px 38px;
+        }
+
+        .login-snip .tab {
+            font-size: 20px;
+        }
+    }
+
+    @media (max-width:768px) {
+        .row {
+            margin-top: 14px;
+        }
+
+        .login-box {
+            min-height: 560px;
+        }
+
+        .login-snip {
+            padding: 44px 26px 30px;
+        }
+
+        .login-space .group {
+            margin-bottom: 13px;
+        }
+
+        .login-space .group .input,
+        .login-space .group .button {
+            padding: 14px 18px;
+        }
+
+        .login-snip .tab {
+            font-size: 19px;
+        }
+
+        .hr {
+            margin: 36px 0 28px;
+        }
+    }
+
+    @media (max-width:576px) {
+        .row {
+            padding: 0 8px;
+        }
+
+        .login-box {
+            min-height: 520px;
+            border-radius: 8px;
+        }
+
+        .login-snip {
+            padding: 32px 18px 24px;
+        }
+
+        .login-snip .tab {
+            font-size: 18px;
+            margin-right: 12px;
+        }
+
+        .login-space .group .label {
+            font-size: 11px;
+        }
+
+        .login-space .group .input,
+        .login-space .group .button {
+            padding: 13px 16px;
+        }
+
+        .foot label {
+            display: inline-block;
+            padding: 6px 10px;
+        }
+    }
+
+    @media (prefers-reduced-motion:reduce) {
+
+        .login-snip .login,
+        .login-snip .sign-up-form {
+            transition: none;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="background"></div>
+
+{# Alerte d'erreur (safe si "error" non défini) #}
+{% if error is defined and error %}
+<div class="alert alert-danger">
+    {{ error.messageKey|trans(error.messageData, 'security') }}
+</div>
+{% endif %}
+
+{# Info déjà connecté #}
+{% if app.user %}
+<div class="alert alert-info">
+    Déjà connecté en tant que <strong>{{ app.user.userIdentifier }}</strong>.
+    <a href="{{ path('app_logout') }}">Se déconnecter</a>
+</div>
+{% endif %}
+
+<div class="row">
+    <div class="col-md-6 mx-auto p-0">
+        <div class="card">
+            <div class="login-box">
+                <div class="login-snip">
+
+                    {# Onglet Connexion (toujours présent) #}
+                    <input id="tab-1" type="radio" name="tab" class="sign-in" checked>
+                    <label for="tab-1" class="tab">Connexion</label>
+
+                    {# Onglet S'enregistrer : seulement si registrationForm est fourni #}
+                    {% if registrationForm is defined %}
+                    <input id="tab-2" type="radio" name="tab" class="sign-up">
+                    <label for="tab-2" class="tab">S'enregistrer</label>
+                    {% endif %}
+
+                    <div class="login-space">
+                        {# --- Formulaire de connexion --- #}
+                        <form method="post" action="{{ path('app_login') }}">
+                            <div class="login">
+                                <div class="group">
+                                    <label for="user" class="label">Email</label>
+                                    <input id="user" type="email" class="input" name="_username"
+                                        placeholder="Renseignez votre email" value="{{ last_username|default('') }}"
+                                        required autofocus>
+                                </div>
+
+                                <div class="group">
+                                    <label for="pass" class="label">Mot de passe</label>
+                                    <input id="pass" type="password" class="input" name="_password"
+                                        placeholder="Renseignez votre mot de passe" autocomplete="current-password"
+                                        required>
+                                </div>
+
+                                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+
+
+                                <div class="group">
+                                    <input type="submit" class="button" value="Se connecter">
+                                </div>
+                            </div>
+                        </form>
+
+                        {# --- Formulaire d'inscription (optionnel) --- #}
+                        {% if registrationForm is defined %}
+                        <div class="sign-up-form">
+                            {% if not registrationForm.vars.valid %}
+                            <div class="form-errors">
+                                {{ form_errors(registrationForm) }}
+                            </div>
+                            {% endif %}
+
+                            {{ form_start(registrationForm, {
+                            action: path('app_register'),
+                            attr: { class: 'auth-form', novalidate: 'novalidate' }
+                            }) }}
+
+                            <div class="group">
+                                {{ form_label(registrationForm.email, 'Email', {'label_attr': {'class': 'label'}}) }}
+                                {{ form_widget(registrationForm.email, {'attr': {'class': 'input', 'placeholder':
+                                "Renseignez votre email"}}) }}
+                                {{ form_errors(registrationForm.email) }}
+                            </div>
+
+                            <div class="group">
+                                {{ form_label(registrationForm.plainPassword, 'Mot de passe', {'label_attr': {'class':
+                                'label'}}) }}
+                                {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'input',
+                                'placeholder': "Créez votre mot de passe"}}) }}
+                                {{ form_errors(registrationForm.plainPassword) }}
+                            </div>
+
+                            <div class="group">
+                                <input type="submit" class="button" value="S'enregistrer">
+                            </div>
+
+                            {{ form_end(registrationForm) }}
+
+                            <div class="hr"></div>
+                            <div class="foot">
+                                <label for="tab-1">Déjà membre ?</label>
+                            </div>
+                        </div>
+                        {% else %}
+                        {# Si pas de registrationForm, propose un lien (optionnel) #}
+                        <div class="hr"></div>
+                        <div class="foot">
+                            <a href="{{ path('app_register') }}">Créer un compte</a>
+                        </div>
+                        {% endif %}
+                    </div><!-- /.login-space -->
+
+                </div><!-- /.login-snip -->
+            </div><!-- /.login-box -->
+        </div><!-- /.card -->
+    </div>
+</div>
+{% endblock %}

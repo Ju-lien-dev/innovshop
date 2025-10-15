@@ -1,0 +1,21 @@
+<!-- Emails envoyés aux admins lors d'une nouvelle commande -->
+
+{# templates/emails/order_new.html.twig #}
+<h2>🛒 Nouvelle commande #{{ order.reference }}</h2>
+<p><strong>Client :</strong> {{ order.user.prenom ~ ' ' ~ order.user.nom }} — {{ order.user.email }}</p>
+<p><strong>Date :</strong> {{ order.createdAt|date('d/m/Y H:i') }}</p>
+<p><strong>Total :</strong> {{ order.total|number_format(2, '.', ' ') }} €</p>
+
+{% if shipMeta.ship_name %}
+<p><strong>Livraison :</strong><br>
+    {{ shipMeta.ship_name }}<br>
+    {{ shipMeta.ship_addr }}<br>
+    {{ shipMeta.ship_zip }} {{ shipMeta.ship_city }} ({{ shipMeta.ship_ctry }})</p>
+{% endif %}
+
+<h3>Détails</h3>
+<ul>
+    {% for item in order.articles %}
+    <li>{{ item.nomProduit }} × {{ item.quantite }} — {{ item.sousTotal|number_format(2, '.', ' ') }} €</li>
+    {% endfor %}
+</ul>

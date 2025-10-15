@@ -1,0 +1,27 @@
+{# templates/admin/fields/articles_of_order.html.twig #}
+{% set items = field.value ?? [] %}
+
+{% if items is empty %}
+<em>Aucun article</em>
+{% else %}
+<table class="table table-sm">
+    <thead>
+        <tr>
+            <th>Produit</th>
+            <th style="width:10%">Qté</th>
+            <th style="width:15%">Prix €</th>
+            <th style="width:15%">Sous-total €</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for it in items %}
+        <tr>
+            <td>{{ it.nomProduit }}</td>
+            <td>{{ it.quantite }}</td>
+            <td>{{ it.prix|number_format(2, '.', ' ') }}</td>
+            <td>{{ it.sousTotal|number_format(2, '.', ' ') }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}

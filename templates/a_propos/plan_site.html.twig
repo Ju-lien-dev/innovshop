@@ -1,0 +1,152 @@
+{% extends 'base.html.twig' %}
+{% block title %}Plan du site{% endblock %}
+
+{% block body %}
+<style>
+    :root {
+        --card-bg: #fff;
+        --card-bd: #e5e7eb;
+        --text-muted: #6b7280;
+        --radius: 12px;
+        --shadow: 0 1px 2px rgba(0, 0, 0, .05);
+        --brand: #333;
+    }
+
+    .background {
+        background: #fff;
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        overflow: hidden;
+    }
+
+    .page-hero h1 {
+        margin: 0;
+        font-weight: 800;
+        letter-spacing: .2px;
+    }
+
+    .page-hero p {
+        color: var(--text-muted);
+        margin: 6px 0 0;
+    }
+
+    .breadcrumb-sm a {
+        color: var(--text-muted);
+        text-decoration: none;
+    }
+
+    .breadcrumb-sm a:hover {
+        text-decoration: underline;
+    }
+
+    .card {
+        background: var(--card-bg);
+        border: 1px solid var(--card-bd);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+    }
+
+    .card .card-bd {
+        padding: 16px;
+    }
+
+    .soft-box {
+        border: 1px solid var(--card-bd);
+        border-radius: 10px;
+        padding: 14px 18px;
+        background: #fff;
+    }
+
+    .link-list {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .link-list li {
+        margin: 8px 0;
+    }
+
+    /* ✨ Effet type header sur les liens */
+    .link-anim {
+        position: relative;
+        display: inline-block;
+        overflow: hidden;
+        font-weight: 500;
+        text-decoration: none;
+        color: var(--brand);
+    }
+
+    .link-anim span {
+        display: inline-block;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    .link-anim::after {
+        content: attr(data-text);
+        position: absolute;
+        left: 0;
+        top: 100%;
+        width: 100%;
+        text-align: left;
+        color: #888;
+        opacity: 0;
+        transition: all 0.3s ease;
+    }
+
+    .link-anim:hover span {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+
+    .link-anim:hover::after {
+        top: 0;
+        opacity: 1;
+    }
+
+    @media(min-width:992px) {
+        .max-w {
+            max-width: 720px;
+        }
+    }
+</style>
+
+<div class="background"></div>
+
+<section class="page-hero">
+    <div class="container max-w">
+        <nav class="breadcrumb-sm mb-2">
+            <a href="{{ path('app_front') }}">Accueil</a> · <span class="muted">Plan du site</span>
+        </nav>
+        <h1>Plan du site</h1>
+        <p>Retrouvez rapidement toutes les pages importantes.</p>
+    </div>
+</section>
+
+<div class="container max-w">
+    <article class="card">
+        <div class="card-bd">
+            <div class="soft-box">
+                <ul class="link-list">
+                    <li><a class="link-anim" href="{{ path('app_front') }}" data-text="Accueil"><span>Accueil</span></a>
+                    </li>
+                    <li><a class="link-anim" href="{{ path('a_propos') }}" data-text="À propos"><span>À
+                                propos</span></a></li>
+                    <li><a class="link-anim" href="{{ path('mentions_legales') }}"
+                            data-text="Mentions légales"><span>Mentions légales</span></a></li>
+                    <li><a class="link-anim" href="{{ path('cgv') }}" data-text="CGV"><span>CGV</span></a></li>
+                    <li><a class="link-anim" href="{{ path('confidentialite') }}"
+                            data-text="Confidentialité"><span>Confidentialité</span></a></li>
+                    <li><a class="link-anim" href="{{ path('service_contact') }}"
+                            data-text="Contact & SAV"><span>Contact & SAV</span></a></li>
+                    <li><a class="link-anim" href="{{ path('service_livraison_paiements') }}"
+                            data-text="Livraison & Paiements"><span>Livraison & Paiements</span></a></li>
+                    <li><a class="link-anim" href="{{ path('service_retours_retractation') }}"
+                            data-text="Retours & Rétractation"><span>Retours & Rétractation</span></a></li>
+                </ul>
+            </div>
+        </div>
+    </article>
+</div>
+{% endblock %}

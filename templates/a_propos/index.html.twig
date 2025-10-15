@@ -1,0 +1,171 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}À propos{% endblock %}
+
+{% block body %}
+<style>
+    :root {
+        --card-bg: #fff;
+        --card-bd: #e5e7eb;
+        --text-muted: #6b7280;
+        --radius: 12px;
+        --shadow: 0 1px 2px rgba(0, 0, 0, .05);
+        --brand: #0ea5e9;
+    }
+
+    .background {
+        background-color: #fff;
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        overflow: hidden;
+    }
+
+    .page-hero h1 {
+        margin: 0;
+        font-weight: 800;
+        letter-spacing: .2px;
+    }
+
+    .breadcrumb-sm a {
+        color: var(--text-muted);
+        text-decoration: none;
+    }
+
+    .breadcrumb-sm a:hover {
+        text-decoration: underline;
+    }
+
+    .grid {
+        display: grid;
+        gap: 16px;
+    }
+
+    @media(min-width:992px) {
+        .grid-2 {
+            grid-template-columns: 2fr 1fr;
+        }
+    }
+
+    .card {
+        background: var(--card-bg);
+        border: 1px solid var(--card-bd);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+    }
+
+    .card .card-hd {
+        padding: 14px 16px 0;
+    }
+
+    .card .card-bd {
+        padding: 16px;
+    }
+
+    .card h2 {
+        font-size: 1.25rem;
+        margin: 0 0 8px;
+    }
+
+    .muted {
+        color: var(--text-muted);
+    }
+
+    .kv {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kv li {
+        display: grid;
+        grid-template-columns: 150px 1fr;
+        gap: 12px;
+        padding: 6px 0;
+    }
+
+    a.link {
+        color: var(--brand);
+        text-decoration: none;
+    }
+
+    a.link:hover {
+        text-decoration: underline;
+    }
+
+    .hr {
+        height: 1px;
+        background: var(--card-bd);
+        margin: 16px 0;
+    }
+</style>
+
+<div class="background"></div>
+
+<section class="page-hero">
+    <div class="container">
+        <nav class="breadcrumb-sm mb-2">
+            <a href="{{ path('app_front') }}">Accueil</a> · <span class="muted">À propos</span>
+        </nav>
+        <h1>À propos de nous</h1>
+        <p class="muted mb-0">Découvrez qui nous sommes et notre mission.</p>
+    </div>
+</section>
+
+<div class="container">
+    <div class="grid grid-2">
+        <!-- Colonne principale -->
+        <div class="grid">
+
+            <article class="card">
+                <div class="card-hd">
+                    <h2>Notre mission</h2>
+                </div>
+                <div class="card-bd">
+                    <p>Chez <strong>InnovShop</strong>, notre mission est de proposer des produits de qualité à des prix
+                        accessibles, tout en offrant une expérience client irréprochable.</p>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-hd">
+                    <h2>Notre histoire</h2>
+                </div>
+                <div class="card-bd">
+                    <p>Fondée en 2020 à Paris, InnovShop est née de la volonté de rendre le shopping en ligne plus
+                        simple, transparent et agréable. Aujourd’hui, nous servons des milliers de clients dans toute la
+                        France.</p>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-hd">
+                    <h2>Nos valeurs</h2>
+                </div>
+                <div class="card-bd">
+                    <ul>
+                        <li>✔️ Qualité avant tout</li>
+                        <li>🤝 Confiance et transparence</li>
+                        <li>🚀 Innovation continue</li>
+                        <li>🌿 Engagement éthique et durable</li>
+                    </ul>
+                </div>
+            </article>
+
+        </div>
+
+        <!-- Colonne latérale -->
+        <aside class="grid">
+            <div class="card">
+                <div class="card-hd">
+                    <h2>Liens utiles</h2>
+                </div>
+                <div class="card-bd">
+                    <p><a class="link" href="{{ path('plan_site') }}">Plan du site</a></p>
+                    <p><a class="link" href="{{ path('service_contact') }}">Contact</a></p>
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+{% block title %}Commande {{ order.reference }}{% endblock %}
+
+{% block body %}
+<h1>Commande #{{ order.reference }}</h1>
+
+<div class="mb-3">
+    <strong>Date :</strong> {{ order.createdAt|date('d/m/Y H:i') }}<br>
+    <strong>Client :</strong>
+    {% if order.user %}
+    {{ order.user.prenom ~ ' ' ~ order.user.nom ?: order.user.email }}
+    {% else %}
+    —
+    {% endif %}<br>
+    <strong>Total :</strong> {{ order.total|number_format(2, '.', ' ') }} €<br>
+    <strong>Statut :</strong> {{ order.status }}
+</div>
+
+<h3>Modifier le statut</h3>
+{{ form_start(form) }}
+{{ form_widget(form) }}
+<button class="btn btn-success">Enregistrer</button>
+{{ form_end(form) }}
+
+<hr>
+
+<h3>Détails</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Produit</th>
+            <th>Qté</th>
+            <th>Prix</th>
+            <th>Sous-total</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in order.articles %}
+        <tr>
+            <td>{{ item.nomProduit }}</td>
+            <td>{{ item.quantite }}</td>
+            <td>{{ item.prix|number_format(2, '.', ' ') }} €</td>
+            <td>{{ item.sousTotal|number_format(2, '.', ' ') }} €</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="4" class="text-center">Aucun article</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a class="btn btn-secondary" href="{{ path('admin_orders_index') }}">← Retour</a>
+{% endblock %}

@@ -1,0 +1,702 @@
+{# templates/account/profile.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon compte{% endblock %}
+
+{% block body %}
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+
+<style>
+    .account-future {
+        --af-bg: #fff;
+        --af-text: #1f2937;
+        --af-muted: #6b7280;
+        --af-card: rgb(243, 241, 238);
+        --af-border: rgba(17, 24, 39, .08);
+        --af-buttons: #333;
+        color: var(--af-text);
+    }
+
+    body {
+        background: var(--af-bg);
+    }
+
+    .af-shell {
+        max-width: 1100px;
+        margin: 48px auto;
+        padding: 24px;
+    }
+
+    .af-card {
+        background: var(--af-card);
+        border: 1px solid var(--af-border);
+        border-radius: 18px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, .15);
+    }
+
+    .af-header {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        padding: 28px;
+    }
+
+    .af-avatar {
+        width: 92px;
+        height: 92px;
+        border-radius: 50%;
+        padding: 3px;
+        background: linear-gradient(135deg, rgba(255, 255, 255, .505), #333);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, .15);
+    }
+
+    .af-avatar img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+        background: #f3f4f6;
+        border: 2px solid rgba(17, 24, 39, .06);
+    }
+
+    .af-identity h5 {
+        margin: 0 0 4px;
+        font-weight: 700;
+        letter-spacing: .3px;
+    }
+
+    .af-tabs {
+        padding: 0 24px 10px;
+        border-bottom: 1px solid var(--af-border);
+    }
+
+    #myTab {
+        border-bottom: 2px solid var(--af-buttons);
+    }
+
+    .af-tabs .nav-link {
+        color: var(--af-muted);
+        border: none;
+        background: transparent;
+        margin-right: 6px;
+        padding: 10px 16px;
+        border-radius: 12px 12px 0 0;
+        transition: .22s;
+        white-space: nowrap;
+    }
+
+    .af-tabs .nav-link:hover {
+        color: var(--af-text);
+        text-decoration: none;
+    }
+
+    .af-tabs .nav-link.active {
+        color: #fff;
+        background: var(--af-text);
+        box-shadow: 0 6px 16px rgba(6, 182, 212, .15), inset 0 0 0 1px rgba(255, 255, 255, .4);
+    }
+
+    .af-body {
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        gap: 22px;
+        padding: 22px;
+    }
+
+    .af-side {
+        background: #fff;
+        border: 1px solid var(--af-border);
+        border-radius: 14px;
+        padding: 18px;
+        box-shadow: 0 8px 24px rgba(2, 6, 23, .05);
+    }
+
+    .af-side h6 {
+        font-size: .9rem;
+        letter-spacing: .5px;
+        color: var(--af-muted);
+        margin-bottom: 12px;
+    }
+
+    .af-link {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        margin-bottom: 8px;
+        border-radius: 10px;
+        color: var(--af-text);
+        text-decoration: none;
+        border: 1px solid transparent;
+        transition: .2s;
+    }
+
+    .af-link:hover {
+        background: #f9fafb;
+        border-color: var(--af-border);
+        transform: translateY(-1px);
+        text-decoration: none;
+    }
+
+    .af-panel {
+        background: #fff;
+        border: 1px solid var(--af-border);
+        border-radius: 14px;
+        padding: 18px;
+        box-shadow: 0 8px 24px rgba(2, 6, 23, .05);
+    }
+
+    .af-row {
+        display: grid;
+        grid-template-columns: 220px 1fr;
+        gap: 12px;
+        padding: 10px 0;
+        border-bottom: 1px dashed rgba(17, 24, 39, .08);
+    }
+
+    .af-row:last-child {
+        border-bottom: 0;
+    }
+
+    .af-row label {
+        color: var(--af-muted);
+        margin: 0;
+    }
+
+    .account-future .form-control {
+        background: #f8fafc;
+        border: 1px solid #e5e7eb;
+        color: var(--af-text);
+        border-radius: 12px;
+        padding: 10px 14px;
+    }
+
+    .account-future .form-control:focus {
+        background: #fff;
+        border-color: rgba(6, 182, 212, .5);
+        box-shadow: 0 8px 24px rgba(2, 6, 23, .05);
+    }
+
+    .af-actions {
+        display: flex;
+        gap: 12px;
+        justify-content: flex-end;
+    }
+
+    .af-btn {
+        border: 1px solid var(--af-border);
+        color: #fff;
+        background: var(--af-buttons);
+        padding: 10px 16px;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: .18s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .af-btn:hover {
+        border: 1px solid #333;
+        background: #fff;
+        color: var(--af-text);
+        transform: translateY(-1px);
+        box-shadow: 0 8px 24px rgba(2, 6, 23, .05);
+        text-decoration: none;
+    }
+
+    .af-btn.outline {
+        background: #fff;
+        color: var(--af-text);
+    }
+
+    .af-flash {
+        border-radius: 12px;
+        padding: 12px 14px;
+        margin-bottom: 14px;
+        border: 1px solid transparent;
+        background: linear-gradient(90deg, rgba(6, 182, 212, .1), rgba(139, 92, 246, .08));
+    }
+
+    .d-none {
+        display: none !important;
+    }
+
+    .order-card {
+        border: 1px solid var(--af-border);
+        border-radius: 12px;
+        padding: 14px;
+        margin-bottom: 12px;
+    }
+
+    .order-card .head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 6px;
+    }
+
+    .order-card .meta {
+        color: var(--af-muted);
+        font-size: .9rem;
+    }
+
+    .af-icon {
+        width: 22px;
+        height: 22px;
+        flex-shrink: 0;
+        margin-right: 8px;
+        color: var(--af-accent);
+    }
+
+    .af-icon path,
+    .af-icon circle,
+    .af-icon rect {
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    /* Adresses */
+    .addr-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 12px;
+    }
+
+    .addr-card {
+        border: 1px solid var(--af-border);
+        border-radius: 12px;
+        padding: 14px;
+        background: #fff;
+        box-shadow: 0 6px 16px rgba(2, 6, 23, .04);
+    }
+
+    .addr-card strong {
+        display: block;
+        margin-bottom: 6px;
+    }
+
+    .addr-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 10px;
+        flex-wrap: wrap;
+    }
+
+    .addr-empty {
+        padding: 16px;
+        border: 1px dashed var(--af-border);
+        border-radius: 12px;
+        color: var(--af-muted);
+        text-align: center;
+    }
+
+    .section-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin: 14px 0 8px;
+    }
+
+    /* ======== RWD (ajouts, aucun changement visuel desktop) ======== */
+    /* Tabs scrollables en mobile */
+    @media (max-width: 768px) {
+        .af-tabs {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .af-tabs::-webkit-scrollbar {
+            display: none;
+        }
+    }
+
+    /* Corps en une colonne (déjà à 992px), on raffine les espacements */
+    @media (max-width: 992px) {
+        .af-body {
+            grid-template-columns: 1fr;
+            padding: 16px;
+            gap: 16px;
+        }
+
+        .af-shell {
+            margin: 32px auto;
+            padding: 16px;
+        }
+
+        .af-header {
+            padding: 20px;
+            gap: 16px;
+        }
+    }
+
+    /* Stack header + avatar plus petit, rangées verticales, boutons 100% si besoin */
+    @media (max-width: 768px) {
+        .af-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .af-avatar {
+            width: 72px;
+            height: 72px;
+        }
+
+        .af-row {
+            grid-template-columns: 1fr;
+            gap: 6px;
+        }
+
+        .af-actions {
+            flex-wrap: wrap;
+            justify-content: stretch;
+        }
+
+        .af-actions .af-btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+
+    /* Très petit écran : paddings compacts */
+    @media (max-width: 576px) {
+        .af-shell {
+            padding: 12px;
+        }
+
+        .af-card {
+            border-radius: 14px;
+        }
+
+        .af-panel {
+            padding: 14px;
+        }
+
+        .af-side {
+            padding: 14px;
+        }
+    }
+
+    /* Accessibilité : réduire les mouvements si demandé */
+    @media (prefers-reduced-motion: reduce) {
+
+        .af-tabs .nav-link,
+        .af-link,
+        .af-btn {
+            transition: none;
+        }
+    }
+</style>
+
+<div class="account-future">
+    <div class="af-shell">
+
+        {% for label, messages in app.flashes %}
+        {% for message in messages %}
+        <div class="af-flash {{ label == 'success' ? '' : (label == 'error' ? 'danger' : 'info') }}">{{ message }}</div>
+        {% endfor %}
+        {% endfor %}
+
+        {# Safe: si "form" n'est pas fourni, editOpen = false #}
+        {% set editOpen = (form is defined and form.vars.submitted and not form.vars.valid) %}
+
+        <div class="af-card">
+            <!-- Header -->
+            <div class="af-header">
+                <div class="af-avatar">
+                    <img src="https://placehold.co/400x400/f3f4f6/111?text=IS" alt="Avatar">
+                </div>
+                <div class="af-identity">
+                    {% set fullNameHeader = (app.user.prenom ?? '') ~ ' ' ~ (app.user.nom ?? '') %}
+                    <h5>{{ fullNameHeader|trim ?: (app.user.userIdentifier ?? 'Client') }}</h5>
+                    <div class="meta">Client InnovShop</div>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="af-tabs">
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
+                            aria-controls="home" aria-selected="true">Mes infos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="upcoming-tab" data-toggle="tab" href="#upcoming" role="tab"
+                            aria-controls="upcoming" aria-selected="false">Commandes à venir</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="done-tab" data-toggle="tab" href="#done" role="tab" aria-controls="done"
+                            aria-selected="false">Commandes terminées</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Body -->
+            <div class="af-body">
+                <!-- Shortcuts -->
+                <aside class="af-side">
+                    <h6>Raccourcis</h6>
+                    <a class="af-link" href="{{ path('app_account') }}">
+                        <svg class="af-icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <circle cx="12" cy="7" r="4"></circle>
+                            <path d="M20 21a8 8 0 1 0-16 0"></path>
+                        </svg>
+                        Mon compte
+                    </a>
+                    <a class="af-link" href="{{ path('app_account_password') }}">
+                        <svg class="af-icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <rect x="3" y="11" width="18" height="10" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                        Changer mon mot de passe
+                    </a>
+                    <a class="af-link" href="{{ path('app_account') }}#addresses">
+                        <svg class="af-icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M12 3l7 6v10a2 2 0 0 1-2 2h-3v-6H10v6H7a2 2 0 0 1-2-2V9l7-6z"></path>
+                        </svg>
+                        Mes adresses
+                    </a>
+                    <a class="af-link" href="{{ path('app_account_address_add') }}">
+                        <svg class="af-icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M12 5v14M5 12h14"></path>
+                        </svg>
+                        Ajouter une adresse
+                    </a>
+                </aside>
+
+                <!-- Panels -->
+                <div class="tab-content" style="min-height:220px">
+                    {# MES INFOS #}
+                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                        <section id="panel-infos" class="af-panel {{ editOpen ? 'd-none' : '' }}">
+                            {% set fullName = (app.user.prenom ?? '') ~ ' ' ~ (app.user.nom ?? '') %}
+                            <div class="af-row"><label>Nom complet</label>
+                                <div>{{ fullName|trim ?: '-' }}</div>
+                            </div>
+                            <div class="af-row"><label>Email</label>
+                                <div>{{ app.user.email ?? app.user.userIdentifier ?? '-' }}</div>
+                            </div>
+                            <div class="af-row"><label>Téléphone</label>
+                                <div>{{ app.user.phone ?? '-' }}</div>
+                            </div>
+
+                            <div class="af-actions mt-3">
+                                <a href="#addresses" class="af-btn outline" id="go-addresses">Gérer mes adresses</a>
+                                <button type="button" class="af-btn" id="btn-toggle-edit" {{ form is not defined
+                                    ? 'disabled' : '' }}>Modifier mes infos</button>
+                            </div>
+                        </section>
+
+                        <section id="panel-edit" class="af-panel {{ editOpen ? '' : 'd-none' }}">
+                            {% if form is defined %}
+                            {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+                            {{ form_errors(form) }}
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    {{ form_label(form.prenom, 'Prénom') }}
+                                    {{ form_widget(form.prenom, {'attr': {'class': 'form-control'}}) }}
+                                    {{ form_errors(form.prenom) }}
+                                </div>
+                                <div class="form-group col-md-6">
+                                    {{ form_label(form.nom, 'Nom') }}
+                                    {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+                                    {{ form_errors(form.nom) }}
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                {{ form_label(form.phone, 'Téléphone') }}
+                                {{ form_widget(form.phone, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(form.phone) }}
+                            </div>
+
+                            <div class="form-group">
+                                {{ form_label(form.email, 'Email') }}
+                                {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(form.email) }}
+                            </div>
+
+                            <div class="af-actions">
+                                <button type="button" class="af-btn outline" id="btn-cancel-edit">Annuler</button>
+                                <button type="submit" class="af-btn">Enregistrer</button>
+                            </div>
+                            {{ form_end(form) }}
+                            {% else %}
+                            <p class="text-muted mb-0">Le formulaire d’édition n’est pas disponible.</p>
+                            {% endif %}
+                        </section>
+                    </div>
+
+                    {# MES ADRESSES #}
+                    <div class="tab-pane fade" id="addresses" role="tabpanel" aria-labelledby="addresses-tab">
+                        <section class="af-panel">
+                            <div class="section-head">
+                                <h5 class="mb-0">Mes adresses</h5>
+                                <a href="{{ path('app_account_address_add') }}" class="af-btn">Ajouter une adresse</a>
+                            </div>
+
+                            {% if app.user.adresses|length > 0 %}
+                            <div class="addr-grid">
+                                {% for adresse in app.user.adresses %}
+                                <div class="addr-card">
+                                    <strong>{{ adresse.type }}</strong>
+                                    <div>{{ adresse.nom }}</div>
+                                    <div>{{ adresse.adresse }}</div>
+                                    <div>{{ adresse.codePostal }} {{ adresse.ville }}</div>
+
+                                    <div class="addr-actions">
+                                        <a href="{{ path('app_account_address_edit', {id: adresse.id}) }}"
+                                            class="af-btn outline">Modifier</a>
+                                        <form action="{{ path('app_account_address_delete', {id: adresse.id}) }}"
+                                            method="post" onsubmit="return confirm('Supprimer cette adresse ?');">
+                                            <input type="hidden" name="_token"
+                                                value="{{ csrf_token('delete_address_' ~ adresse.id) }}">
+                                            <button class="af-btn outline" type="submit">Supprimer</button>
+                                        </form>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <div class="addr-empty">
+                                Aucune adresse enregistrée pour le moment.
+                                <div class="mt-2">
+                                    <a href="{{ path('app_account_address_add') }}" class="af-btn">Ajouter une
+                                        adresse</a>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </section>
+                    </div>
+
+                    {# COMMANDES A VENIR #}
+                    <div class="tab-pane fade" id="upcoming" role="tabpanel" aria-labelledby="upcoming-tab">
+                        <section class="af-panel">
+                            {% set upcoming = upcomingOrders|default([]) %}
+                            {% if upcoming is empty %}
+                            <p class="text-muted mb-0">Aucune commande à venir.</p>
+                            {% else %}
+                            {% for order in upcoming %}
+                            <div class="order-card">
+                                <div class="head">
+                                    <strong>Commande #{{ order.reference ?? order.id }}</strong>
+                                    <span class="meta">{{ (order.date ?? order.createdAt)|date('d/m/Y H:i') }}</span>
+                                </div>
+                                <div class="meta">
+                                    Statut :
+                                    {% set s = (order.status ?? '')|trim|lower %}
+                                    {% if s == 'paid' %}Confirmée
+                                    {% elseif s == 'processing' %}En préparation
+                                    {% elseif s == 'shipped' %}Expédiée
+                                    {% elseif s == 'delivered' %}Livrée
+                                    {% else %}{{ order.status }}{% endif %}
+                                    — Total : {{ (order.total ?? 0)|number_format(2, '.', ' ') }} €
+                                </div>
+                                {% if order.id is defined %}
+                                <div class="mt-2"><a class="af-btn outline"
+                                        href="{{ path('app_order_show', {id: order.id}) }}">Détails</a></div>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                            {% endif %}
+                        </section>
+                    </div>
+
+                    {# COMMANDES TERMINEES #}
+                    <div class="tab-pane fade" id="done" role="tabpanel" aria-labelledby="done-tab">
+                        <section class="af-panel">
+                            {% set done = doneOrders|default([]) %}
+                            {% if done is empty %}
+                            <p class="text-muted mb-0">Aucune commande terminée.</p>
+                            {% else %}
+                            {% for order in done %}
+                            <div class="order-card">
+                                <div class="head">
+                                    <strong>Commande #{{ order.reference ?? order.id }}</strong>
+                                    <span class="meta">{{ (order.createdAt ?? order.date)|date('d/m/Y H:i') }}</span>
+                                </div>
+                                <div class="meta">
+                                    Statut :
+                                    {% set s = (order.status ?? '')|trim|lower %}
+                                    {% if s in ['terminé','termine','completed','done','delivered'] %}Terminée
+                                    {% else %}{{ order.status }}{% endif %}
+                                    — Total : {{ (order.total ?? 0)|number_format(2, '.', ' ') }} €
+                                </div>
+                                {% if order.id is defined %}
+                                <div class="mt-2"><a class="af-btn outline"
+                                        href="{{ path('app_order_show', {id: order.id}) }}">Détails</a></div>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                            {% endif %}
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    $(function () {
+        // Active un pane par hash (inclut #addresses qui n'a pas d'onglet)
+        function showPaneManually(paneId) {
+            $('.tab-content .tab-pane.show.active').removeClass('show active');
+            var $pane = $(paneId);
+            if ($pane.length) $pane.addClass('show active');
+
+            // retire active sur les onglets "Mes infos / Commandes"
+            $('#myTab .nav-link.active').removeClass('active').attr('aria-selected', 'false');
+        }
+
+        function activateFromHash() {
+            var hash = window.location.hash;
+            if (!hash) return;
+            if (hash === '#addresses') { showPaneManually('#addresses'); return; }
+            var $tabLink = $('#myTab a[href="' + hash + '"]');
+            if ($tabLink.length) $tabLink.tab('show');
+        }
+
+        // init
+        activateFromHash();
+
+        // Mise à jour de l'URL quand on change d'onglet
+        $('#myTab a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            history.replaceState(null, null, $(e.target).attr('href'));
+        });
+
+        // Réagit au changement de hash (ex: clic "Mes adresses" dans la sidebar)
+        $(window).on('hashchange', activateFromHash);
+
+        // Bouton "Gérer mes adresses"
+        $('#go-addresses').on('click', function (e) {
+            e.preventDefault();
+            history.replaceState(null, null, '#addresses');
+            activateFromHash();
+        });
+
+        // Toggle édition infos
+        const $panelInfos = $('#panel-infos');
+        const $panelEdit = $('#panel-edit');
+
+        $('#btn-toggle-edit').on('click', function () {
+            $panelInfos.addClass('d-none');
+            $panelEdit.removeClass('d-none');
+        });
+
+        $('#btn-cancel-edit').on('click', function () {
+            $panelEdit.addClass('d-none');
+            $panelInfos.removeClass('d-none');
+        });
+    });
+</script>
+{% endblock %}

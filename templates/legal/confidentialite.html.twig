@@ -1,0 +1,340 @@
+{# templates/pages/confidentialite.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Politique de confidentialité{% endblock %}
+
+{% block body %}
+<style>
+    :root {
+        --card-bg: #fff;
+        --card-bd: #e5e7eb;
+        --text-muted: #6b7280;
+        --radius: 12px;
+        --shadow: 0 1px 2px rgba(0, 0, 0, .05);
+        --brand: #0ea5e9;
+        /* ajuste si besoin */
+    }
+
+    .background {
+        background-color: #fff;
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        overflow: hidden;
+    }
+
+    .page-hero h1 {
+        margin: 0;
+        font-weight: 800;
+        letter-spacing: .2px;
+    }
+
+    .breadcrumb-sm a {
+        color: var(--text-muted);
+        text-decoration: none;
+    }
+
+    .breadcrumb-sm a:hover {
+        text-decoration: underline;
+    }
+
+    .grid {
+        display: grid;
+        gap: 16px;
+    }
+
+    @media(min-width:992px) {
+        .grid-2 {
+            grid-template-columns: 2fr 1fr;
+        }
+    }
+
+    .card {
+        background: var(--card-bg);
+        border: 1px solid var(--card-bd);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+    }
+
+    .card .card-hd {
+        padding: 14px 16px 0;
+    }
+
+    .card .card-bd {
+        padding: 16px;
+    }
+
+    .card h2 {
+        font-size: 1.25rem;
+        margin: 0 0 8px;
+    }
+
+    .hr {
+        height: 1px;
+        background: var(--card-bd);
+        margin: 16px 0;
+    }
+
+    .muted {
+        color: var(--text-muted);
+    }
+
+    .kv {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kv li {
+        display: grid;
+        grid-template-columns: 180px 1fr;
+        gap: 12px;
+        padding: 6px 0;
+    }
+
+    .callout {
+        border-left: 3px solid var(--brand);
+        background: #f8fafc;
+        border-radius: 8px;
+        padding: 12px 14px;
+        font-size: .95rem;
+    }
+
+    a.link {
+        color: var(--brand);
+        text-decoration: none;
+    }
+
+    a.link:hover {
+        text-decoration: underline;
+    }
+
+    @media print {
+        .page-hero {
+            background: none;
+            border: 0;
+            padding: 0 0 8px
+        }
+
+        .card {
+            box-shadow: none
+        }
+
+        .no-print {
+            display: none !important
+        }
+    }
+</style>
+
+<div class="background"></div>
+
+<section class="page-hero">
+    <div class="container">
+        <nav class="breadcrumb-sm mb-2">
+            <a href="{{ path('app_front') }}">Accueil</a> · <span class="muted">Confidentialité</span>
+        </nav>
+        <h1>Politique de confidentialité</h1>
+        <p class="muted mb-0">Comment nous collectons, utilisons et protégeons vos données sur {{
+            app.request.schemeAndHttpHost }}.</p>
+    </div>
+</section>
+
+<div class="container">
+    <div class="grid grid-2">
+        {# Colonne principale #}
+        <div class="grid">
+
+            <article class="card">
+                <div class="card-bd">
+                    <p>Cette politique décrit la manière dont <strong>InnovShop SAS</strong> traite vos données
+                        personnelles lorsque vous utilisez
+                        <strong>{{ app.request.schemeAndHttpHost }}</strong>. En naviguant ou en passant commande, vous
+                        acceptez les pratiques décrites ci-dessous.
+                    </p>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-hd">
+                    <h2>1. Responsable du traitement</h2>
+                </div>
+                <div class="card-bd">
+                    <ul class="kv">
+                        <li><span class="muted">Organisation</span>
+                            <div><strong>InnovShop SAS</strong></div>
+                        </li>
+                        <li><span class="muted">Adresse</span>
+                            <div>12 rue de l’Exemple, 75000 Paris, France</div>
+                        </li>
+                        <li><span class="muted">Contact</span>
+                            <div><a class="link" href="mailto:support@innovshop.fr">support@innovshop.fr</a></div>
+                        </li>
+                        <li><span class="muted">DPO</span>
+                            <div>Nom Prénom — <a class="link" href="mailto:dpo@innovshop.fr">dpo@innovshop.fr</a></div>
+                        </li>
+                    </ul>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-hd">
+                    <h2>2. Données collectées</h2>
+                </div>
+                <div class="card-bd">
+                    <ul>
+                        <li>Données d’identification (nom, prénom, adresse, email, téléphone)</li>
+                        <li>Données de connexion et de navigation (logs, cookies, mesures d’audience)</li>
+                        <li>Données liées aux commandes, paiements et livraisons</li>
+                    </ul>
+                    <div class="callout mt-2">Nous ne stockons jamais vos données de carte bancaire sur nos serveurs.
+                    </div>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-hd">
+                    <h2>3. Finalités du traitement</h2>
+                </div>
+                <div class="card-bd">
+                    <ul>
+                        <li>Gestion des comptes, commandes et livraisons</li>
+                        <li>Support client et communication transactionnelle</li>
+                        <li>Amélioration du site et prévention de la fraude</li>
+                        <li>Prospection commerciale <em>(si consentement)</em></li>
+                    </ul>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-hd">
+                    <h2>4. Bases légales</h2>
+                </div>
+                <div class="card-bd">
+                    <ul>
+                        <li>Exécution du contrat (traitement de votre commande)</li>
+                        <li>Obligation légale (facturation, garanties)</li>
+                        <li>Intérêt légitime (sécurité, amélioration du service)</li>
+                        <li>Consentement (newsletter, cookies non essentiels)</li>
+                    </ul>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-hd">
+                    <h2>5. Durées de conservation</h2>
+                </div>
+                <div class="card-bd">
+                    <p>Nous conservons vos données pour la durée strictement nécessaire aux finalités, puis les
+                        archivons/anonymisons conformément aux délais légaux (ex. factures : 10 ans).</p>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-hd">
+                    <h2>6. Partage des données</h2>
+                </div>
+                <div class="card-bd">
+                    <p>Vos données peuvent être transmises à nos prestataires (paiement, transport, hébergement) pour
+                        exécuter votre commande. Aucune vente de données à des tiers.</p>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-hd">
+                    <h2>7. Vos droits</h2>
+                </div>
+                <div class="card-bd">
+                    <p>Conformément au RGPD, vous disposez des droits d’accès, rectification, effacement, limitation,
+                        opposition et portabilité.</p>
+                    <p>Pour exercer vos droits : <a class="link" href="mailto:dpo@innovshop.fr">dpo@innovshop.fr</a>.
+                    </p>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-hd">
+                    <h2>8. Sécurité</h2>
+                </div>
+                <div class="card-bd">
+                    <p>Mesures techniques et organisationnelles adaptées (chiffrement, contrôle d’accès,
+                        journalisation). Les transactions sont traitées par un prestataire certifié.</p>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-hd">
+                    <h2>9. Cookies & mesure d’audience</h2>
+                </div>
+                <div class="card-bd">
+                    <p>Des cookies techniques sont nécessaires au fonctionnement du site. Les cookies de mesure
+                        d’audience ou marketing ne sont utilisés qu’avec votre consentement (bannière de consentement).
+                    </p>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-hd">
+                    <h2>10. Modifications</h2>
+                </div>
+                <div class="card-bd">
+                    <p>Cette politique peut évoluer. La version en vigueur est celle publiée sur cette page, avec
+                        application immédiate.</p>
+                </div>
+            </article>
+
+            <article class="card no-print">
+                <div class="card-bd">
+                    <button class="btn btn-outline-secondary w-100" onclick="window.print()">Imprimer la
+                        politique</button>
+                </div>
+            </article>
+        </div>
+
+        {# Colonne latérale #}
+        <aside class="grid">
+            <div class="card">
+                <div class="card-hd">
+                    <h2>Récapitulatif</h2>
+                </div>
+                <div class="card-bd">
+                    <ul class="kv">
+                        <li><span class="muted">Site</span>
+                            <div>{{ app.request.schemeAndHttpHost }}</div>
+                        </li>
+                        <li><span class="muted">Responsable</span>
+                            <div>InnovShop SAS</div>
+                        </li>
+                        <li><span class="muted">Contact DPO</span>
+                            <div><a class="link" href="mailto:dpo@innovshop.fr">dpo@innovshop.fr</a></div>
+                        </li>
+                    </ul>
+                    <div class="hr"></div>
+                    <p class="muted mb-0">Voir aussi : <a class="link" href="{{ path('mentions_legales') }}">Mentions
+                            légales</a> · <a class="link" href="{{ path('cgv') }}">CGV</a></p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-hd">
+                    <h2>Besoin d’aide ?</h2>
+                </div>
+                <div class="card-bd">
+                    <p class="mb-2">Notre équipe support répond sous 24–48h ouvrées.</p>
+                    <a class="link" href="mailto:support@innovshop.fr">support@innovshop.fr</a>
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
+
+{# Données structurées (SEO) #}
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"PrivacyPolicy",
+  "name":"Politique de confidentialité",
+  "url":"{{ app.request.schemeAndHttpHost }}",
+  "publisher":{"@type":"Organization","name":"InnovShop"}
+}
+</script>
+{% endblock %}

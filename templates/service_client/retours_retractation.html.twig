@@ -1,0 +1,87 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Retours & Droit de rétractation{% endblock %}
+
+{% block body %}
+{% include 'service_client/_style_block.html.twig' %}
+
+<div class="background"></div>
+
+<section class="page-hero">
+    <div class="container">
+        <nav class="breadcrumb-sm mb-2">
+            <a href="{{ path('app_front') }}">Accueil</a> · <span class="muted">Retours & rétractation</span>
+        </nav>
+        <h1>Retours & Droit de rétractation</h1>
+        <p class="muted mb-0">Vos droits en cas de retour produit ou d’annulation.</p>
+    </div>
+</section>
+
+<div class="container">
+    <div class="grid grid-2">
+        <!-- Colonne principale -->
+        <div class="grid">
+            <article class="card">
+                <div class="card-hd">
+                    <h2>Délai légal</h2>
+                </div>
+                <div class="card-bd">
+                    <p>Conformément à la législation, vous disposez d’un <strong>délai de 14 jours calendaires</strong>
+                        à compter de la réception pour exercer votre droit de rétractation.</p>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-hd">
+                    <h2>Procédure de retour</h2>
+                </div>
+                <div class="card-bd">
+                    <ol>
+                        <li>Contactez notre service client via <a class="link"
+                                href="mailto:support@innovshop.fr">support@innovshop.fr</a></li>
+                        <li>Indiquez votre numéro de commande et le motif du retour</li>
+                        <li>Suivez les instructions envoyées par email</li>
+                    </ol>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-hd">
+                    <h2>Remboursements</h2>
+                </div>
+                <div class="card-bd">
+                    <p>Le remboursement intervient dans un délai de 14 jours après réception du produit retourné, sur le
+                        moyen de paiement utilisé à la commande.</p>
+                </div>
+            </article>
+        </div>
+
+        <!-- Colonne latérale -->
+        <aside class="grid">
+            <div class="card">
+                <div class="card-hd">
+                    <h2>Récapitulatif</h2>
+                </div>
+                <div class="card-bd">
+                    <ul class="kv">
+                        <li><span class="muted">Site</span>
+                            <div>{{ app.request.schemeAndHttpHost }}</div>
+                        </li>
+                        <li><span class="muted">Entreprise</span>
+                            <div>InnovShop SAS</div>
+                        </li>
+                        <li><span class="muted">Contact</span>
+                            <div><a class="link" href="mailto:support@innovshop.fr">support@innovshop.fr</a></div>
+                        </li>
+                    </ul>
+                    <div class="hr"></div>
+                    <p class="muted mb-0">Voir aussi :
+                        <a class="link" href="{{ path('service_contact') }}">Contact</a> ·
+                        <a class="link" href="{{ path('service_livraison_paiements') }}">Livraison</a>
+                    </p>
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,335 @@
+{# templates/pages/mentions-legales.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Mentions légales{% endblock %}
+
+{% block body %}
+<style>
+    /* Palette & tokens légers pour rester cohérent sur le site */
+    :root {
+        --card-bg: #fff;
+        --card-bd: #e5e7eb;
+        --text-muted: #6b7280;
+        --text-strong: #111827;
+        --radius: 12px;
+        --shadow: 0 1px 2px rgba(0, 0, 0, .05);
+        --brand: #0ea5e9;
+        /* Ajuste à ta couleur de marque si besoin */
+    }
+
+    .background {
+        background-color: #fff;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        overflow: hidden;
+    }
+
+
+    .page-hero h1 {
+        margin: 0;
+        font-weight: 800;
+        letter-spacing: .2px;
+    }
+
+    .breadcrumb-sm a {
+        color: var(--text-muted);
+        text-decoration: none;
+    }
+
+    .breadcrumb-sm a:hover {
+        text-decoration: underline;
+    }
+
+    .grid {
+        display: grid;
+        gap: 16px;
+    }
+
+    @media (min-width: 992px) {
+        .grid-2 {
+            grid-template-columns: 2fr 1fr;
+        }
+    }
+
+    .card {
+        background: var(--card-bg);
+        border: 1px solid var(--card-bd);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+    }
+
+    .card .card-hd {
+        padding: 14px 16px 0;
+    }
+
+    .card .card-bd {
+        padding: 16px;
+    }
+
+    .card h2 {
+        font-size: 1.25rem;
+        margin: 0 0 8px;
+    }
+
+    .hr {
+        height: 1px;
+        background: var(--card-bd);
+        margin: 16px 0;
+    }
+
+    .kv {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kv li {
+        display: grid;
+        grid-template-columns: 180px 1fr;
+        gap: 12px;
+        padding: 6px 0;
+    }
+
+    .kv small,
+    .muted {
+        color: var(--text-muted);
+    }
+
+    .callout {
+        border-left: 3px solid var(--brand);
+        background: #f8fafc;
+        border-radius: 8px;
+        padding: 12px 14px;
+        font-size: .95rem;
+    }
+
+    /* Liens */
+    a.link {
+        color: var(--brand);
+        text-decoration: none;
+    }
+
+    a.link:hover {
+        text-decoration: underline;
+    }
+
+    /* Impression propre */
+    @media print {
+        .page-hero {
+            background: none;
+            border: 0;
+            padding: 0 0 8px;
+        }
+
+        .card {
+            box-shadow: none;
+        }
+
+        .no-print {
+            display: none !important;
+        }
+    }
+</style>
+<div class="background"></div>
+
+<section class="page-hero">
+    <div class="container">
+        <nav class="breadcrumb-sm mb-2">
+            <a href="{{ path('app_front') }}">Accueil</a> · <span class="muted">Mentions légales</span>
+        </nav>
+        <h1>Mentions légales</h1>
+        <p class="muted mb-0">Informations légales et obligations de l’éditeur du site.</p>
+    </div>
+</section>
+
+<div class="container">
+    <div class="grid grid-2">
+        {# Colonne principale #}
+        <div class="grid">
+            <article class="card">
+                <div class="card-bd">
+                    <p>
+                        Conformément aux articles 6-III et 19 de la Loi n°2004-575 du 21 juin 2004 pour la Confiance
+                        dans l’Économie Numérique (L.C.E.N.), il est porté à la connaissance des utilisateurs du site
+                        <strong>{{ app.request.schemeAndHttpHost }}</strong> les présentes mentions légales.
+                    </p>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-hd">
+                    <h2>1. Éditeur du site</h2>
+                </div>
+                <div class="card-bd">
+                    <ul class="kv">
+                        <li><small class="muted">Nom de l’entreprise</small>
+                            <div><strong>InnovShop SAS</strong></div>
+                        </li>
+                        <li><small class="muted">Forme juridique</small>
+                            <div>Société par Actions Simplifiée (SAS)</div>
+                        </li>
+                        <li><small class="muted">Capital</small>
+                            <div>10 000 €</div>
+                        </li>
+                        <li><small class="muted">Siège social</small>
+                            <div>12 rue de l’Exemple, 75000 Paris, France</div>
+                        </li>
+                        <li><small class="muted">Immatriculation</small>
+                            <div>SIREN 123 456 789 — RCS Paris</div>
+                        </li>
+                        <li><small class="muted">TVA</small>
+                            <div>FRXX123456789</div>
+                        </li>
+                        <li><small class="muted">Direction de la publication</small>
+                            <div>Mme/M. Nom Prénom</div>
+                        </li>
+                        <li><small class="muted">Email</small>
+                            <div><a class="link" href="mailto:support@innovshop.fr">support@innovshop.fr</a></div>
+                        </li>
+                        <li><small class="muted">Téléphone</small>
+                            <div>+33 1 23 45 67 89</div>
+                        </li>
+                    </ul>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-hd">
+                    <h2>2. Hébergement</h2>
+                </div>
+                <div class="card-bd">
+                    <p class="mb-2"><strong>OVHcloud</strong></p>
+                    <p class="mb-1">2 rue Kellermann, 59100 Roubaix, France</p>
+                    <p class="mb-1">Téléphone : +33 9 72 10 10 07</p>
+                    <p class="mb-0">Site : <a class="link" target="_blank" rel="noopener">ovhcloud.com</a></p>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-hd">
+                    <h2>3. Propriété intellectuelle</h2>
+                </div>
+                <div class="card-bd">
+                    <p>
+                        L’ensemble des éléments du site (textes, visuels, design, structure) est protégé par le droit
+                        d’auteur
+                        et la législation sur la propriété intellectuelle. Toute reproduction ou adaptation, totale ou
+                        partielle,
+                        est interdite sans autorisation écrite préalable.
+                    </p>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-hd">
+                    <h2>4. Données personnelles</h2>
+                </div>
+                <div class="card-bd">
+                    <p>
+                        Les données collectées sont traitées conformément au RGPD et à la loi Informatique et Libertés.
+                        Consultez notre <a class="link" href="{{ path('confidentialite') }}">Politique de
+                            confidentialité</a>.
+                    </p>
+                    <div class="hr"></div>
+                    <ul class="kv">
+                        <li><small class="muted">DPO</small>
+                            <div>Nom Prénom</div>
+                        </li>
+                        <li><small class="muted">Email DPO</small>
+                            <div><a class="link" href="innovshop@gmail.com">dpo@innovshop.fr</a></div>
+                        </li>
+                    </ul>
+                    <div class="callout mt-3">
+                        Astuce : vous pouvez exercer vos droits (accès, rectification, suppression, opposition,
+                        portabilité)
+                        en nous écrivant à <a class="link" href="mailto:privacy@innovshop.fr">privacy@innovshop.fr</a>.
+                    </div>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-hd">
+                    <h2>5. Responsabilité</h2>
+                </div>
+                <div class="card-bd">
+                    <p>
+                        L’éditeur ne saurait être tenu responsable des dommages directs ou indirects causés au matériel
+                        de l’utilisateur lors de l’accès au site. L’utilisateur s’engage à utiliser un équipement
+                        récent,
+                        exempt de virus, et un navigateur à jour.
+                    </p>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-hd">
+                    <h2>6. Droit applicable</h2>
+                </div>
+                <div class="card-bd">
+                    <p>
+                        Les présentes mentions légales sont régies par le droit français. À défaut de résolution
+                        amiable,
+                        les tribunaux français seront seuls compétents.
+                    </p>
+                </div>
+            </article>
+        </div>
+
+        {# Colonne latérale : contacts & raccourcis #}
+        <aside class="grid">
+            <div class="card">
+                <div class="card-hd">
+                    <h2>Contact légal</h2>
+                </div>
+                <div class="card-bd">
+                    <p class="mb-2"><strong>Service juridique</strong></p>
+                    <p class="mb-1"><a class="link" href="mailto:legal@innovshop.fr">legal@innovshop.fr</a></p>
+                    <p class="mb-0 muted">Du lundi au vendredi — 9h/18h</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-hd">
+                    <h2>Raccourcis utiles</h2>
+                </div>
+                <div class="card-bd">
+                    <ul class="mb-0" style="padding-left: 18px;">
+                        <li><a class="link" href="{{ path('confidentialite') }}">Politique de confidentialité</a></li>
+                        <li><a class="link" href="{{ path('cgv') }}">CGV / CGU</a></li>
+                        <li><a class="link">Nous contacter</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card no-print">
+                <div class="card-bd">
+                    <button class="btn btn-outline-secondary w-100" onclick="window.print()">Imprimer la page</button>
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
+
+{# Données structurées basiques (SEO) #}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "InnovShop",
+  "url": "{{ app.request.schemeAndHttpHost }}",
+  "email": "support@innovshop.fr",
+  "telephone": "+33123456789",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "12 rue de l’Exemple",
+    "postalCode": "75000",
+    "addressLocality": "Paris",
+    "addressCountry": "FR"
+  }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,105 @@
+{% extends 'base.html.twig' %}
+{% block title %}Paiement{% endblock %}
+
+{% block body %}
+<style>
+    .wrap-min {
+        max-width: 720px;
+        margin: 40px auto;
+        padding: 0 16px;
+    }
+
+    .card {
+        background: #fff;
+        border: 1px solid rgba(17, 24, 39, .10);
+        border-radius: 16px;
+        box-shadow: 0 16px 40px rgba(2, 6, 23, .08);
+        padding: 28px;
+    }
+
+    .sum-btn {
+        display: block;
+        width: 100%;
+        margin-top: 14px;
+        padding: 14px 16px;
+        background: #111827;
+        color: #fff;
+        text-align: center;
+        border-radius: 25px;
+        text-decoration: none;
+        transition: background .2s;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, .15);
+        border: 1px solid #333;
+    }
+
+    .sum-btn:hover {
+        filter: brightness(.96);
+        color: #333;
+        background: #fff;
+        border: 1px solid #333;
+        text-decoration: none;
+    }
+
+    .muted {
+        color: #6b7280;
+    }
+
+    .spinner {
+        width: 22px;
+        height: 22px;
+        border: 3px solid #e5e7eb;
+        border-top-color: #111827;
+        border-radius: 50%;
+        animation: spin .8s linear infinite;
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 8px;
+    }
+
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+</style>
+
+<div class="wrap-min">
+    <div class="card">
+        <h2>Redirection vers le paiement…</h2>
+        <p class="muted">Vos informations ont été enregistrées. Vous allez être redirigé vers la page de paiement
+            sécurisé.</p>
+
+        <form id="pay" action="{{ path('app_create_checkout_session') }}" method="POST">
+            {# Optionnel si tu veux valider côté contrôleur :
+            <input type="hidden" name="_token" value="{{ csrf_token('stripe_checkout') }}"> #}
+            <button class="sum-btn" type="submit">
+                Continuer vers le paiement
+            </button>
+        </form>
+
+        <p style="margin-top:10px;">
+            <a href="{{ path('app_checkout_review') }}">↩ Modifier mes informations</a>
+        </p>
+
+        <p id="auto-note" class="muted" style="margin-top:8px; display:none;">
+            <span class="spinner" aria-hidden="true"></span>Redirection automatique en cours…
+        </p>
+        <noscript>
+            <p class="muted">JavaScript est désactivé : cliquez sur le bouton ci-dessus.</p>
+        </noscript>
+    </div>
+</div>
+
+<script>
+    (function () {
+        // auto-submit si ?auto=1 dans l’URL
+        var params = new URLSearchParams(window.location.search);
+        if (params.get('auto') === '1') {
+            var note = document.getElementById('auto-note');
+            if (note) note.style.display = 'block';
+            var form = document.getElementById('pay');
+            if (form) form.submit();
+        }
+    })();
+</script>
+{% endblock %}

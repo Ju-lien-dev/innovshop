@@ -1,0 +1,705 @@
+{# templates/checkout/review.html.twig #}
+{% extends 'base.html.twig' %}
+{% block title %}Vérification & livraison{% endblock %}
+
+{% block body %}
+{# Totaux depuis la structure de session (prix en centimes) #}
+{% set total = 0 %}
+{% set totalQty = 0 %}
+{% if items.id is defined and items.id is not empty %}
+{% for i in 0..(items.id|length - 1) %}
+{% set total = total + (items.prix[i] * items.quantite[i]) %}
+{% set totalQty = totalQty + items.quantite[i] %}
+{% endfor %}
+{% endif %}
+
+<style>
+    /* ========= Page scope ========= */
+    #checkoutPro {
+        --ink: #0f172a;
+        --muted: #6b7280;
+        --bg: #fff;
+        --border: rgba(2, 6, 23, .10);
+        --ring: rgba(59, 130, 246, .45);
+        --shadow: 0 20px 45px rgba(2, 6, 23, .08);
+        --card: #fff;
+    }
+
+    .background {
+        background: #fff;
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        overflow: hidden;
+    }
+
+    #checkoutPro .wrap {
+        max-width: 1200px;
+        margin: 42px auto;
+        padding: 0 18px;
+    }
+
+    #checkoutPro .grid {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 26px;
+        align-items: start;
+    }
+
+    @media (max-width:1024px) {
+        #checkoutPro .grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        box-shadow: var(--shadow);
+    }
+
+    /* ===== Récap (gauche) ===== */
+    .recap {
+        position: sticky;
+        top: 18px;
+        padding: 18px;
+    }
+
+    .recap .head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 4px 4px 12px;
+    }
+
+    .recap h3 {
+        margin: 0;
+        font-size: 1.4rem;
+        font-weight: 800;
+        letter-spacing: .2px;
+        color: var(--ink);
+    }
+
+    .pill {
+        font-size: .85rem;
+        color: var(--ink);
+        background: #f3f4f6;
+        border: 1px solid var(--border);
+        padding: 6px 10px;
+        border-radius: 999px;
+        white-space: nowrap;
+    }
+
+    .recap .list {
+        padding: 6px;
+    }
+
+    .recap .line {
+        display: grid;
+        grid-template-columns: 64px 1fr auto;
+        gap: 14px;
+        align-items: center;
+        padding: 14px 6px;
+        border-top: 1px dashed var(--border);
+    }
+
+    .recap .line:first-child {
+        border-top: 0;
+    }
+
+    .thumb {
+        width: 60px;
+        height: 60px;
+        border-radius: 12px;
+        object-fit: cover;
+        border: 1px solid var(--border);
+        background: #f8fafc;
+    }
+
+    .title {
+        font-weight: 700;
+        color: var(--ink);
+    }
+
+    .ref {
+        color: var(--muted);
+        font-size: .86rem;
+        margin-top: 2px;
+    }
+
+    .price {
+        white-space: nowrap;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .recap .foot {
+        margin-top: 10px;
+        padding-top: 12px;
+        border-top: 1px dashed var(--border);
+    }
+
+    .back {
+        color: var(--muted);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .back:hover {
+        color: var(--ink);
+    }
+
+    /* ===== Formulaire (droite) ===== */
+    .formCard {
+        padding: 22px;
+    }
+
+    .formCard h4 {
+        margin: 0 0 12px;
+        font-size: 1.2rem;
+        font-weight: 800;
+    }
+
+    .summaryBox {
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        background: #fff;
+        padding: 12px;
+        margin-bottom: 16px;
+    }
+
+    .sumRow {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        padding: 10px 6px;
+        border-bottom: 1px dashed var(--border);
+    }
+
+    .sumRow:last-child {
+        border-bottom: 0;
+    }
+
+    .sumRow .label {
+        color: var(--muted);
+    }
+
+    .sumRow .value {
+        white-space: nowrap;
+        font-variant-numeric: tabular-nums;
+        font-weight: 700;
+    }
+
+    form.checkout {
+        display: grid;
+        gap: 16px;
+        margin-top: 12px;
+    }
+
+    .row2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+
+    @media (max-width:640px) {
+        .row2 {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .field label {
+        display: block;
+        font-weight: 700;
+        color: var(--ink);
+        margin-bottom: 6px;
+        font-size: .98rem;
+    }
+
+    .field input,
+    .field textarea,
+    .field select {
+        width: 100%;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 13px 14px;
+        font-size: 1rem;
+        background: #fff;
+        transition: box-shadow .15s ease, border-color .15s ease;
+    }
+
+    .field textarea {
+        resize: vertical;
+        min-height: 90px;
+    }
+
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus {
+        outline: none;
+        border-color: var(--ring);
+        box-shadow: 0 0 0 4px var(--ring);
+    }
+
+    .help {
+        color: var(--muted);
+        font-size: .85rem;
+        margin-top: 4px;
+    }
+
+    .error {
+        color: #b91c1c;
+        font-size: .85rem;
+        margin-top: 6px;
+    }
+
+    .choices {
+        display: grid;
+        gap: 6px;
+        padding: 6px 0;
+    }
+
+    .checkline {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .cta {
+        display: block;
+        width: 100%;
+        margin-top: 6px;
+        padding: 15px 18px;
+        border-radius: 28px;
+        border: 1px solid #1f2937;
+        background: #0b1220;
+        color: #fff;
+        text-align: center;
+        font-weight: 800;
+        box-shadow: 0 12px 28px rgba(2, 6, 23, .18);
+        transition: transform .08s ease, filter .2s ease, background .2s ease;
+    }
+
+    .cta:hover {
+        filter: brightness(.97);
+        background: #111827;
+        text-decoration: none;
+    }
+
+    .cta:active {
+        transform: translateY(1px);
+    }
+
+    /* === Boutons-carte livraison === */
+    .ship-grid {
+        display: grid;
+        gap: 12px;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    @media (max-width:640px) {
+        .ship-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .ship-card {
+        position: relative;
+        display: block;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 12px;
+        background: #fff;
+        cursor: pointer;
+        transition: box-shadow .15s ease, border-color .15s ease, transform .04s ease;
+    }
+
+    .ship-card:hover {
+        box-shadow: 0 10px 24px rgba(2, 6, 23, .10);
+    }
+
+    .ship-card:active {
+        transform: translateY(1px);
+    }
+
+    .ship-card input[type="radio"] {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    .ship-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 10px;
+    }
+
+    .ship-main {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .ship-name {
+        font-weight: 800;
+        color: var(--ink);
+    }
+
+    .ship-meta {
+        color: var(--muted);
+        font-size: .9rem;
+    }
+
+    .ship-price {
+        font-variant-numeric: tabular-nums;
+        font-weight: 800;
+    }
+
+    .ship-card input[type="radio"]:focus-visible+.ship-content {
+        outline: none;
+        box-shadow: 0 0 0 4px var(--ring);
+    }
+
+    .ship-card input[type="radio"]:checked+.ship-content {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, .18);
+        border-radius: 10px;
+    }
+
+    /* === Bloc adresses enregistrées === */
+    .addr-card {
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 10px;
+        background: #fff;
+    }
+
+    .addr-list {
+        display: grid;
+        gap: 8px;
+    }
+
+    .addr-title {
+        font-weight: 800;
+        margin: 0 0 6px;
+    }
+
+    .addr-radio {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+    }
+
+    .addr-radio input {
+        margin-top: 4px;
+    }
+
+    .addr-meta {
+        color: var(--muted);
+        font-size: .92rem;
+    }
+</style>
+
+<div class="background"></div>
+<div id="checkoutPro">
+    <div class="wrap">
+        <div class="grid">
+
+            {# ===== Récapitulatif (gauche) ===== #}
+            <section class="card recap">
+                <div class="head">
+                    <h3>Récapitulatif</h3>
+                    <span class="pill">
+                        {{ totalQty > 0 ? totalQty ~ ' article' ~ (totalQty > 1 ? 's' : '') : 'Aucun article' }}
+                    </span>
+                </div>
+
+                <div class="list">
+                    {% if items.id is empty %}
+                    <div style="padding: 14px;">
+                        <h5 style="margin:0 0 6px;">Votre panier est vide</h5>
+                        <div class="text-muted">Retournez à la boutique pour ajouter des produits.</div>
+                    </div>
+                    {% else %}
+                    {% for i in 0..(items.id|length - 1) %}
+                    <div class="line">
+                        <img class="thumb" src="{{ asset('images/' ~ (items.image[i]|default('default.png'))) }}"
+                            alt="{{ items.nom_produit[i]|default('Produit') }}">
+                        <div>
+                            <div class="title">{{ items.nom_produit[i] }}</div>
+                            <div class="ref">Réf.&nbsp;#{{ items.id[i] }}</div>
+                        </div>
+                        <div class="price">
+                            {{ (items.prix[i] * items.quantite[i] / 100)|number_format(2, '.', ' ')|replace({' ':
+                            '&nbsp;'})|raw }}&nbsp;€
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+
+                <div class="foot">
+                    <a class="back" href="{{ path('app_cart') }}">↩ Retour au panier</a>
+                </div>
+            </section>
+
+            {# ===== Formulaire (droite) ===== #}
+            <aside class="card formCard">
+                <h4>Adresse & livraison</h4>
+
+                {# Sous-total calculé plus haut (centimes) #}
+                {% set shipping_amount = shipping_amount is defined ? shipping_amount : 0 %}
+
+                <div class="summaryBox" id="js-summary">
+                    <div class="sumRow">
+                        <div class="label">Articles</div>
+                        <div class="value" style="font-weight:600">{{ totalQty }}</div>
+                    </div>
+                    <div class="sumRow">
+                        <div class="label">Sous-total</div>
+                        <div class="value" id="js-subtotal">
+                            {{ (total/100)|number_format(2, '.', ' ')|replace({' ': '&nbsp;'})|raw }}&nbsp;€
+                        </div>
+                    </div>
+                    <div class="sumRow" id="js-ship-row" {% if shipping_amount==0 %}style="display:none" {% endif %}>
+                        <div class="label" id="js-ship-label">
+                            {% if shipping is defined and shipping %}
+                            Livraison ({{ shipping.name }}{% if shipping.minDays is defined and shipping.maxDays is
+                            defined %} — {{ shipping.minDays }}–{{ shipping.maxDays }} j{% endif %})
+                            {% else %}
+                            Livraison
+                            {% endif %}
+                        </div>
+                        <div class="value" id="js-ship">
+                            {{ (shipping_amount/100)|number_format(2, '.', ' ')|replace({' ': '&nbsp;'})|raw }}&nbsp;€
+                        </div>
+                    </div>
+                    <div class="sumRow">
+                        <div class="label"><strong>Total TTC</strong></div>
+                        <div class="value"><strong id="js-total">
+                                {{ ((total + shipping_amount)/100)|number_format(2, '.', ' ')|replace({' ':
+                                '&nbsp;'})|raw }}&nbsp;€
+                            </strong></div>
+                    </div>
+                </div>
+
+                {# ===== Sélection d'une adresse enregistrée (si dispo) ===== #}
+                {% if savedAddresses is defined and savedAddresses|length > 0 %}
+                <div class="addr-card mb-3">
+                    <p class="addr-title">Choisir une adresse enregistrée</p>
+                    <div class="addr-list">
+                        {% for a in savedAddresses %}
+                        <label class="addr-radio">
+                            <input class="saved-address-radio" type="radio" name="saved_address_choice"
+                                value="{{ a.id }}" data-full-name="{{ a.nom|e('html_attr') }}"
+                                data-address="{{ a.adresse|e('html_attr') }}"
+                                data-zip="{{ a.codePostal|e('html_attr') }}" data-city="{{ a.ville|e('html_attr') }}">
+                            <div>
+                                <strong>{{ a.nom }}</strong><br>
+                                {{ a.adresse }}<br>
+                                <span class="addr-meta">{{ a.codePostal }} {{ a.ville }}</span>
+                            </div>
+                        </label>
+                        {% endfor %}
+                        <label class="addr-radio">
+                            <input type="radio" name="saved_address_choice" value="new" checked>
+                            <div><strong>Nouvelle adresse</strong><br><span class="addr-meta">Saisir une autre adresse
+                                    ci-dessous</span></div>
+                        </label>
+                    </div>
+                </div>
+                {% endif %}
+
+                {{ form_start(form, {'attr': {'class': 'checkout', 'novalidate':'novalidate'}}) }}
+
+                <div class="field">
+                    {{ form_label(form.full_name, 'Nom complet') }}
+                    {{ form_widget(form.full_name, { attr: { autocomplete: 'name', placeholder: 'Nom complet' } }) }}
+                    {% if form_errors(form.full_name) is not empty %}
+                    <div class="error">{{ form_errors(form.full_name) }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="field">
+                    {{ form_label(form.address) }}
+                    {{ form_widget(form.address) }}
+                    {% if form_errors(form.address) is not empty %}
+                    <div class="error">{{ form_errors(form.address) }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="row2">
+                    <div class="field">
+                        {{ form_label(form.zip) }}
+                        {{ form_widget(form.zip) }}
+                        {% if form_errors(form.zip) is not empty %}
+                        <div class="error">{{ form_errors(form.zip) }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="field">
+                        {{ form_label(form.city) }}
+                        {{ form_widget(form.city) }}
+                        {% if form_errors(form.city) is not empty %}
+                        <div class="error">{{ form_errors(form.city) }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="field">
+                    {{ form_label(form.country) }}
+                    {{ form_widget(form.country) }}
+                    {% if form_errors(form.country) is not empty %}
+                    <div class="error">{{ form_errors(form.country) }}</div>
+                    {% endif %}
+                </div>
+
+                {# --- ENREGISTRER L’ADRESSE SAISIE --- #}
+                <div class="checkline">
+                    <input type="checkbox" id="save_new_address" name="save_new_address" value="1" {% if savedAddresses
+                        is defined and savedAddresses|length==0 %}checked{% endif %}>
+                    <label for="save_new_address">Enregistrer cette adresse dans mon compte</label>
+                </div>
+                <div class="help">Cochez pour conserver cette adresse pour vos prochaines commandes.</div>
+
+                <div class="field">
+                    <label class="label">{{ form_label(form.delivery) }}</label>
+                    <div class="ship-grid" id="js-ship-grid">
+                        {% for choice in form.delivery %}
+                        {% set attrs = choice.vars.attr %}
+                        <label class="ship-card">
+                            {{ form_widget(choice) }}
+                            <div class="ship-content">
+                                <div class="ship-main">
+                                    <div class="ship-name">{{ attrs['data-name'] ?? choice.vars.label }}</div>
+                                    <div class="ship-meta">Livraison {{ attrs['data-days'] ?? '' }} jours</div>
+                                </div>
+                                <div class="ship-price">
+                                    {{ ((attrs['data-amount'] ?? 0) / 100) | number_format(2, '.', ' ') | replace({' ':
+                                    '&nbsp;'}) | raw }}&nbsp;€
+                                </div>
+                            </div>
+                        </label>
+                        {% endfor %}
+                    </div>
+                    <div class="help" style="margin-top:8px;">Choisissez votre mode d’expédition.</div>
+                    {% if form_errors(form.delivery) is not empty %}
+                    <div class="error">{{ form_errors(form.delivery) }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="field">
+                    {{ form_label(form.notes) }}
+                    {{ form_widget(form.notes, {'attr': {'rows': 4}}) }}
+                </div>
+
+
+                <div class="checkline">
+                    {{ form_widget(form.accept) }}
+                    {{ form_label(form.accept) }}
+                </div>
+                {% if form_errors(form.accept) is not empty %}
+                <div class="error">{{ form_errors(form.accept) }}</div>
+                {% endif %}
+
+                <button class="cta" type="submit">Continuer vers le paiement</button>
+
+                {{ form_end(form) }}
+            </aside>
+
+        </div>
+    </div>
+</div>
+
+{# ===== JS: total dynamique + préremplissage depuis adresse enregistrée ===== #}
+<script>
+    (function () {
+        var SUBTOTAL_CENTS = {{ total|default (0) | json_encode | raw
+    }};
+    if (typeof SUBTOTAL_CENTS !== 'number' || isNaN(SUBTOTAL_CENTS)) SUBTOTAL_CENTS = 0;
+
+    function fmtCents(c) {
+        var euros = (c || 0) / 100;
+        var parts = euros.toFixed(2).split('.');
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+        return parts[0] + ',' + parts[1] + ' €';
+    }
+
+    var elShipRow = document.getElementById('js-ship-row');
+    var elShipLabel = document.getElementById('js-ship-label');
+    var elShip = document.getElementById('js-ship');
+    var elTotal = document.getElementById('js-total');
+    var grid = document.getElementById('js-ship-grid');
+
+    function onChange() {
+        if (!grid) return;
+        var checked = grid.querySelector('input[type="radio"]:checked');
+        var amountCents = 0, name = 'Livraison', days = '';
+        if (checked) {
+            var a = checked.getAttribute('data-amount');
+            amountCents = a ? parseInt(a, 10) : 0;
+            var n = checked.getAttribute('data-name'); if (n) name = n;
+            var d = checked.getAttribute('data-days'); if (d) days = d;
+        }
+        if (elShipRow) {
+            if (amountCents > 0) {
+                elShipRow.style.display = '';
+                if (elShipLabel) elShipLabel.textContent = 'Livraison (' + name + (days ? ' — ' + days + ' j' : '') + ')';
+                if (elShip) elShip.textContent = fmtCents(amountCents);
+            } else {
+                elShipRow.style.display = 'none';
+            }
+        }
+        var total = SUBTOTAL_CENTS + (isNaN(amountCents) ? 0 : amountCents);
+        if (elTotal) elTotal.textContent = fmtCents(total);
+    }
+
+    if (grid) {
+        grid.addEventListener('change', function (e) {
+            var t = e.target || e.srcElement;
+            if (t && t.tagName === 'INPUT' && t.type === 'radio') onChange();
+        });
+    }
+    onChange(); // init
+}) ();
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const $full = document.getElementById('{{ form.full_name.vars.id }}');
+        const $addr = document.getElementById('{{ form.address.vars.id }}');
+        const $zip = document.getElementById('{{ form.zip.vars.id }}');
+        const $city = document.getElementById('{{ form.city.vars.id }}');
+        const $ctry = document.getElementById('{{ form.country.vars.id }}');
+
+        function fillFromDataset(ds) {
+            if ($full) $full.value = ds.fullName || '';
+            if ($addr) $addr.value = ds.address || '';
+            if ($zip) $zip.value = ds.zip || '';
+            if ($city) $city.value = ds.city || '';
+            if ($ctry && !$ctry.value) $ctry.value = 'FR';
+        }
+
+        const radios = document.querySelectorAll('.saved-address-radio, input[name="saved_address_choice"][value="new"]');
+        radios.forEach(r => {
+            r.addEventListener('change', () => {
+                if (r.value === 'new') {
+                    fillFromDataset({ fullName: '', address: '', zip: '', city: '' });
+                    return;
+                }
+                if (r.classList.contains('saved-address-radio') && r.checked) {
+                    fillFromDataset({
+                        fullName: r.dataset.fullName,
+                        address: r.dataset.address,
+                        zip: r.dataset.zip,
+                        city: r.dataset.city
+                    });
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

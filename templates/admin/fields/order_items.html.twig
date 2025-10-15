@@ -1,0 +1,43 @@
+{% set o = entity.instance %}
+{% set items = o.articles ?? [] %}
+
+{% if items is not empty %}
+<table class="table table-sm" style="margin:0">
+    <thead>
+        <tr>
+            <th>Article</th>
+            <th class="text-center" style="width:110px">Qté</th>
+            <th class="text-right" style="width:140px">Prix unitaire</th>
+            <th class="text-right" style="width:140px">Sous-total</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% set total = 0 %}
+        {% for line in items %}
+        {% set q = (line.quantite is defined and line.quantite is not null) ? line.quantite : 1 %}
+        {% set pu = (line.prix is defined and line.prix is not null) ? (line.prix + 0) : 0 %}
+        {% set st = (line.sousTotal is defined and line.sousTotal is not null) ? (line.sousTotal + 0) : (pu * q) %}
+        {% set total = total + st %}
+
+        <tr>
+            <td>{{ line.nomProduit ?? 'Article' }}</td>
+            <td class="text-center">{{ q }}</td>
+            <td class="text-right">{{ pu|number_format(2, ',', ' ') }} €</td>
+            <td class="text-right">{{ st|number_format(2, ',', ' ') }} €</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <th colspan="3" class="text-right">Total lignes</th>
+            <th class="text-right">{{ total|number_format(2, ',', ' ') }} €</th>
+        </tr>
+        <tr>
+            <th colspan="3" class="text-right">Total commande (enregistré)</th>
+            <th class="text-right">{{ (o.total ?? 0)|number_format(2, ',', ' ') }} €</th>
+        </tr>
+    </tfoot>
+</table>
+{% else %}
+<em>Aucune ligne d’article.</em>
+{% endif %}

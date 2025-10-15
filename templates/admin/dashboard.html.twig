@@ -1,0 +1,201 @@
+{% extends '@EasyAdmin/layout.html.twig' %}
+
+{% block main %}
+<h1 class="mb-4">Dashboard</h1>
+
+{# === Map de traduction des statuts === #}
+{% set STATUS_FR = {
+'paid': 'Payée',
+'processing': 'En préparation',
+'shipped': 'Expédiée',
+'delivered': 'Livrée',
+'cancelled': 'Annulée'
+} %}
+
+
+<div class="ea-content">
+    <div style="display:grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap:16px;">
+        <div style="background:#fff; border:1px solid #eee; padding:16px; border-radius:8px;">
+            <div style="font-size:12px; color:#666;">Commandes (total)</div>
+            <div style="font-size:28px; font-weight:700;">{{ metrics.orders_total }}</div>
+        </div>
+        <div style="background:#fff; border:1px solid #eee; padding:16px; border-radius:8px;">
+            <div style="font-size:12px; color:#666;">CA (total)</div>
+            <div style="font-size:28px; font-weight:700;">{{ metrics.revenue_total|number_format(2, '.', ' ') }} €</div>
+        </div>
+        <div style="background:#fff; border:1px solid #eee; padding:16px; border-radius:8px;">
+            <div style="font-size:12px; color:#666;">CA (7 jours)</div>
+            <div style="font-size:28px; font-weight:700;">{{ metrics.revenue_7d|number_format(2, '.', ' ') }} €</div>
+        </div>
+        <div style="background:#fff; border:1px solid #eee; padding:16px; border-radius:8px;">
+            <div style="font-size:12px; color:#666;">CA (30 jours)</div>
+            <div style="font-size:28px; font-weight:700;">{{ metrics.revenue_30d|number_format(2, '.', ' ') }} €</div>
+        </div>
+    </div>
+
+    <div class="mt-4" style="display:grid; grid-template-columns:1fr; gap:16px;">
+        <div style="background:#fff; border:1px solid #eee; padding:16px; border-radius:8px;">
+            <h2 style="margin:0 0 12px;">Répartition par statut</h2>
+            {% if metrics.by_status is not empty %}
+            <ul style="margin:0; padding-left:16px;">
+                {% for row in metrics.by_status %}
+                <li>
+                    <span style="display:inline-block; min-width:110px;">
+                        {{ STATUS_FR[row.status]|default(row.status|capitalize) }}
+                    </span>
+                    : <strong>{{ row.nb }}</strong>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <em>Aucune commande pour l’instant.</em>
+            {% endif %}
+        </div>
+
+        <div style="background:#fff; border:1px solid #eee; padding:16px; border-radius:8px;">
+            <h2 style="margin:0 0 12px;">Dernières commandes</h2>
+            {% if latest is not empty %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Réf</th>
+                        <th>Date</th>
+                        <th>Client</th>
+                        <th>Total</th>
+                        <th>Statut</th>
+                        <th style="width:1%"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in latest %}
+                    <tr>
+                        <td>{{ order.reference }}</td>
+                        <td>{{ order.createdAt|date('d/m/Y H:i') }}</td>
+                        <td>
+                            {% if order.user %}
+                            {{ (order.user.prenom ~ ' ' ~ order.user.nom)|trim ?: order.user.email }}
+                            {% else %}
+                            <em>—</em>
+                            {% endif %}
+                        </td>
+                        <td>{{ order.total|number_format(2, '.', ' ') }} €</td>
+                        <td>
+                            {% set status = order.status %}
+                            <span class="badge
+                                        {% if status == 'paid' %} badge-success
+                                        {% elseif status == 'processing' %} badge-warning
+                                        {% elseif status == 'shipped' %} badge-info
+                                        {% elseif status == 'delivered' %} badge-primary
+                                        {% elseif status == 'cancelled' %} badge-danger
+                                        {% else %} badge-secondary
+                                        {% endif %}">
+                                {{ STATUS_FR[status]|default(status|capitalize) }}
+                            </span>
+                        </td>
+                        <td>
+                            {# Lien vers la page CRUD EasyAdmin de l’entité Commande #}
+                            <a class="btn btn-sm btn-primary" href="{{ ea_url()
+                                                .setController('App\\Controller\\Admin\\CommandeCrudController')
+                                                .setAction('detail')
+                                                .setEntityId(order.id)
+                                           }}">
+                                Détails
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <em>Aucune commande récente.</em>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<section class="mb-4">
+    <h2 style="margin-bottom:.5rem;">Chiffre d’affaires – 30 derniers jours</h2>
+    <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px;height:320px;">
+        <canvas id="revenueChart" data-labels='{{ chart_labels|json_encode|e("html_attr") }}'
+            data-values='{{ chart_values|json_encode|e("html_attr") }}' height="100">
+        </canvas>
+    </div>
+</section>
+
+{# Chart.js #}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+<script>
+    (function () {
+        var el = document.getElementById('revenueChart');
+        if (!el) { return; }
+        if (typeof Chart === 'undefined') { return; }
+
+        // Récupération des données depuis les data-attributes (sécurisé côté Twig)
+        var labelsJson = el.getAttribute('data-labels') || '[]';
+        var valuesJson = el.getAttribute('data-values') || '[]';
+
+        var labels;
+        var values;
+        try {
+            labels = JSON.parse(labelsJson);
+        } catch (e) {
+            labels = [];
+        }
+        try {
+            values = JSON.parse(valuesJson);
+        } catch (e) {
+            values = [];
+        }
+
+        var ctx = el.getContext('2d');
+
+        var config = {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'CA (€) / jour',
+                    data: values,
+                    fill: true,
+                    tension: 0.25,
+                    pointRadius: 2,
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
+                plugins: {
+                    legend: { display: true },
+                    tooltip: {
+                        callbacks: {
+                            label: function (ctx) {
+                                var y = ctx && ctx.parsed && typeof ctx.parsed.y !== 'undefined' ? ctx.parsed.y : 0;
+                                return ' ' + Number(y).toLocaleString('fr-FR', { minimumFractionDigits: 2 }) + ' €';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function (value) {
+                                return Number(value).toLocaleString('fr-FR') + ' €';
+                            }
+                        }
+                    },
+                    x: {
+                        ticks: { maxRotation: 0, autoSkip: true }
+                    }
+                }
+            }
+        };
+
+        new Chart(ctx, config);
+    })();
+</script>
+
+
+{% endblock %}

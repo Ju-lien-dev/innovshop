@@ -1,0 +1,15 @@
+{# templates/admin/fields/shipping_address.html.twig #}
+{% set o = entity.instance %}
+{% if o.shipFullName or o.shipAddress %}
+<div style="line-height:1.4">
+    {% if o.shipFullName %}<div><strong>{{ o.shipFullName }}</strong></div>{% endif %}
+    {% if o.shipAddress %}<div>{{ o.shipAddress }}</div>{% endif %}
+    <div>
+        {% if o.shipZip %}{{ o.shipZip }} {% endif %}
+        {% if o.shipCity %}{{ o.shipCity }}{% endif %}
+        {% if o.shipCountry %} ({{ o.shipCountry }}){% endif %}
+    </div>
+</div>
+{% else %}
+<em>Adresse de livraison non fournie</em>
+{% endif %}
