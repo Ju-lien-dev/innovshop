@@ -1,14 +1,12 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Bienvenue sur notre boutique{% endblock %}
-
 {% block body %}
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <style>
-    /* Style général */
-
+    /* ====== Desktop (inchangé) ====== */
     h2 {
         text-align: center;
         margin-bottom: 40px;
@@ -16,30 +14,26 @@
     }
 
     .background {
-        background-color: #fff;
+        background: #fff;
         position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
+        inset: 0;
         z-index: -1;
         overflow: hidden;
     }
 
-    /* Hero  */
-
+    /* Hero */
     .hero {
         margin-top: 10px;
         display: flex;
         text-align: center;
-        background-color: rgb(243, 241, 238);
+        background: rgb(243, 241, 238);
         color: #333;
         margin-bottom: 50px;
         height: 500px;
     }
 
     .heroLeft {
-        background-color: rgb(243, 241, 238);
+        background: rgb(243, 241, 238);
         display: flex;
         flex-direction: column;
         width: 50%;
@@ -55,7 +49,7 @@
     }
 
     .heroRight {
-        background-color: rgb(243, 241, 238);
+        background: rgb(243, 241, 238);
         width: 50%;
         overflow: hidden;
         padding: auto;
@@ -95,11 +89,10 @@
         opacity: 0;
         transform: translateY(60px);
         animation: fadeInUp 1s ease-out forwards;
-        animation-delay: 0.5s;
+        animation-delay: .5s;
     }
 
-    /* Caroussel marques automatique  */
-
+    /* Logos */
     .carousselContainer {
         display: flex;
         justify-content: center;
@@ -131,7 +124,7 @@
         height: 100px;
         object-fit: contain;
         filter: grayscale(100%);
-        transition: filter 0.3s;
+        transition: filter .3s;
     }
 
     @keyframes scroll {
@@ -154,7 +147,7 @@
         }
     }
 
-    /* Cards  */
+    /* Cards catalogue */
     .products {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -163,7 +156,7 @@
 
     .card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, .15);
         cursor: pointer;
     }
 
@@ -193,7 +186,7 @@
 
     .btn-add {
         background: #4caf50;
-        color: white;
+        color: #fff;
         text-align: center;
         padding: 10px;
         border-radius: 6px;
@@ -244,16 +237,16 @@
 
     .el-wrapper {
         width: 360px;
-        background-color: #fff;
+        background: #fff;
     }
 
-    @media (max-width: 991px) {
+    @media (max-width:991px) {
         .el-wrapper {
             width: 345px;
         }
     }
 
-    @media (max-width: 767px) {
+    @media (max-width:767px) {
         .el-wrapper {
             width: 290px;
             margin: 30px auto;
@@ -261,7 +254,7 @@
     }
 
     .el-wrapper:hover .h-bg {
-        left: 0px;
+        left: 0;
     }
 
     .el-wrapper:hover .price {
@@ -276,7 +269,7 @@
 
     .el-wrapper:hover .img {
         filter: blur(7px);
-        opacity: 0.4;
+        opacity: .4;
     }
 
     .el-wrapper:hover .info-inner {
@@ -312,7 +305,7 @@
         transition: all 800ms cubic-bezier(0, 0, 0.18, 1);
         width: 650px;
         height: 100%;
-        background-color: rgb(243, 241, 238);
+        background: rgb(243, 241, 238);
         position: absolute;
         left: -659px;
     }
@@ -320,7 +313,7 @@
     .h-bg .h-bg-inner {
         width: 50%;
         height: 100%;
-        background-color: #333;
+        background: #333;
     }
 
     .info-inner {
@@ -328,11 +321,6 @@
         position: absolute;
         width: 100%;
         bottom: 25px;
-    }
-
-    .info-inner .p-name,
-    .info-inner .p-company {
-        display: block;
     }
 
     .info-inner .p-name {
@@ -366,10 +354,7 @@
     .cart {
         display: block;
         position: absolute;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
+        inset: 0;
         font-family: 'Lato', sans-serif;
         font-weight: 700;
     }
@@ -377,7 +362,6 @@
     .cart .price {
         transition: all 600ms cubic-bezier(0, 0, 0.18, 1);
         transition-delay: 100ms;
-        display: block;
         position: absolute;
         top: 50%;
         left: 50%;
@@ -389,7 +373,6 @@
     .cart .add-to-cart {
         transition: all 600ms cubic-bezier(0, 0, 0.18, 1);
         transition-delay: 100ms;
-        display: block;
         position: absolute;
         top: 50%;
         left: 110%;
@@ -400,12 +383,12 @@
         padding-left: 10px;
         font-size: 12px;
         color: #fff;
-        letter-spacing: 0.045em;
+        letter-spacing: .045em;
         text-transform: uppercase;
         white-space: nowrap;
     }
 
-    /* Produits populaires (structure existante conservée) */
+    /* Populaires */
     .produitsPop {
         position: relative;
         min-height: 380px;
@@ -435,7 +418,7 @@
         justify-content: space-evenly;
         height: 100%;
         width: 100%;
-        background-color: transparent;
+        background: transparent;
     }
 
     .wrapper {
@@ -457,7 +440,7 @@
         justify-content: flex-end;
         background: #fff;
         opacity: 0;
-        transform: scale(0.98);
+        transform: scale(.98);
         transition: opacity 2.6s ease-out, transform 2.6s ease-out;
         z-index: 1;
     }
@@ -468,11 +451,11 @@
     }
 
     .product-card:hover {
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, .08);
     }
 
     .product-card img:hover {
-        filter: brightness(0.9);
+        filter: brightness(.9);
     }
 
     .product-card img {
@@ -501,14 +484,14 @@
         height: 80%;
         border: 1px solid #eee;
         border-radius: 10px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, .05);
         background: #fff;
         overflow: hidden;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        transition: transform .2s ease, box-shadow .2s ease;
     }
 
     .card:hover {
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, .15);
     }
 
     .card img {
@@ -547,8 +530,8 @@
         border-radius: 30px;
         text-decoration: none;
         font-weight: bold;
-        transition: background 0.2s;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        transition: background .2s;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, .15);
         border: 1px solid #333;
         opacity: 0;
         transform: translateY(60px);
@@ -563,20 +546,15 @@
     }
 
     /* Footer */
-    .col_white_amrc {
-        color: #FFF;
-    }
-
     footer {
         width: 100%;
         background: #333333;
         min-height: 250px;
-        padding: 10px 0 25px 0;
+        padding: 10px 0 25px;
     }
 
-    .pt2 {
-        padding-top: 40px;
-        margin-bottom: 20px;
+    .col_white_amrc {
+        color: #FFF;
     }
 
     footer p {
@@ -585,19 +563,15 @@
         margin-bottom: 8px;
     }
 
-    .mb10 {
-        padding-bottom: 15px;
-    }
-
     .footer_ul_amrc {
         margin: 0;
         list-style: none;
         font-size: 14px;
-        padding: 0 0 10px 0;
+        padding: 0 0 10px;
     }
 
     .footer_ul_amrc li {
-        padding: 0 0 5px 0;
+        padding: 0 0 5px;
     }
 
     .footer_ul_amrc li a {
@@ -607,32 +581,6 @@
     .footer_ul_amrc li a:hover {
         color: #fff;
         text-decoration: none;
-    }
-
-    .fleft {
-        float: left;
-    }
-
-    .padding-right {
-        padding-right: 10px;
-    }
-
-    .footer_ul2_amrc {
-        margin: 0;
-        list-style: none;
-        padding: 0;
-    }
-
-    .footer_ul2_amrc li p {
-        display: table;
-    }
-
-    .footer_ul2_amrc li a:hover {
-        text-decoration: none;
-    }
-
-    .footer_ul2_amrc li i {
-        margin-top: 5px;
     }
 
     .bottom_border {
@@ -665,10 +613,6 @@
         list-style: none;
     }
 
-    .social_footer_ul li {
-        padding-top: 10px;
-    }
-
     .social_footer_ul li a {
         color: #CCC;
         border: 1px solid #CCC;
@@ -681,34 +625,9 @@
         height: 36px;
     }
 
-    /* ========== RWD ONLY (ajouts) ========== */
+    /* ====== RWD XXL mobile ====== */
 
-    /* ≤ 1200px : réduire paddings et tailles */
-    @media (max-width: 1200px) {
-        .hero {
-            height: 460px;
-        }
-
-        .heroLeft {
-            padding: 70px 20px;
-        }
-
-        .hero h1 {
-            font-size: 2.2rem;
-        }
-
-        .logo-track img,
-        .logo-track2 img {
-            height: 90px;
-        }
-
-        .logo-track,
-        .logo-track2 {
-            gap: 48px;
-        }
-    }
-
-    /* ≤ 992px : passer le hero en colonnes, carousel plus bas, cartes plus compactes */
+    /* ≤ 992px : structure en colonne + déjà grand */
     @media (max-width: 992px) {
         .hero {
             flex-direction: column-reverse;
@@ -721,167 +640,253 @@
         }
 
         .heroLeft {
-            padding: 40px 16px 24px;
+            padding: 64px 22px 36px;
         }
 
         .heroRight img {
-            max-height: 360px;
-            height: 360px;
+            max-height: 520px;
+            height: 520px;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            line-height: 1.15;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
         }
 
         .buttons {
-            margin-top: 24px;
-            gap: 12px;
+            margin-top: 28px;
+            gap: 16px;
         }
 
         .btn-main {
-            width: 180px;
-            padding: 10px 18px;
+            width: 100%;
+            max-width: 640px;
+            padding: 18px 30px;
+            font-size: 1.25rem;
+            border-radius: 38px;
         }
 
         .logo-carousel,
         .logo-carousel2 {
-            width: 90%;
+            width: 95%;
         }
 
         .logo-track img,
         .logo-track2 img {
-            height: 80px;
+            height: 110px;
         }
 
         .logo-track,
         .logo-track2 {
-            gap: 40px;
-        }
-
-        .el-wrapper {
-            width: 320px;
-        }
-
-        .el-wrapper .box-up {
-            height: 260px;
-        }
-
-        .card img {
-            height: 160px;
-        }
-    }
-
-    /* ≤ 768px : textes plus grands lisibles, boutons sur 100%, grilles respirent */
-    @media (max-width: 768px) {
-        .hero h1 {
-            font-size: 2rem;
-        }
-
-        .hero p {
-            font-size: 1rem;
-            margin-bottom: 18px;
-        }
-
-        .btn-main {
-            width: 100%;
-            max-width: 420px;
-        }
-
-        .logo-track img,
-        .logo-track2 img {
-            height: 70px;
-        }
-
-        .logo-track,
-        .logo-track2 {
-            gap: 28px;
-        }
-
-        .sectionProduits {
-            padding: 0 8px;
+            gap: 56px;
         }
 
         .el-wrapper {
             width: 100%;
-            max-width: 360px;
-            margin: 18px auto;
+            max-width: 620px;
         }
 
         .el-wrapper .box-up {
-            height: 230px;
-        }
-
-        .product-card {
-            width: 180px;
-            height: 270px;
-        }
-
-        .product-info h3 {
-            font-size: .95rem;
-        }
-
-        .foote_bottom_ul_amrc li a {
-            margin: 0 8px;
-        }
-    }
-
-    /* ≤ 576px : éléments tactiles, images plus basses, logos plus petits */
-    @media (max-width: 576px) {
-        .heroRight img {
-            max-height: 280px;
-            height: 280px;
-        }
-
-        .carousel-control-prev,
-        .carousel-control-next {
-            opacity: .9;
-        }
-
-        .carousel-control-prev,
-        .carousel-control-next {
-            width: 14%;
-        }
-
-        .logo-track img,
-        .logo-track2 img {
-            height: 56px;
-        }
-
-        .logo-track,
-        .logo-track2 {
-            gap: 20px;
-        }
-
-        .card {
-            margin: 8px;
+            height: 420px;
         }
 
         .card img {
-            height: 150px;
+            height: 320px;
         }
 
         .card-body {
-            padding: 12px;
+            padding: 20px;
         }
 
         .card-body .titre {
-            font-size: 1rem;
+            font-size: 1.5rem;
         }
 
         .card-body .price {
-            font-size: .95rem;
+            font-size: 1.35rem;
+        }
+
+        .info-inner .p-name {
+            font-size: 24px;
+        }
+
+        .a-size {
+            font-size: 16px;
         }
 
         .cart .price {
-            font-size: 15px;
+            font-size: 20px;
         }
 
         .cart .add-to-cart .txt {
-            font-size: 11px;
-        }
-
-        footer {
-            padding: 16px 0 22px;
+            font-size: 16px;
         }
     }
 
-    /* Préférence accessibilité : réduire mouvements si demandé */
+    /* ≤ 768px : très grand pour téléphone */
+    @media (max-width: 768px) {
+        h2 {
+            font-size: 2.6rem;
+            margin-top: 28px;
+            margin-bottom: 28px;
+        }
+
+        .heroLeft {
+            padding: 72px 22px 38px;
+        }
+
+        .heroRight img {
+            max-height: 620px;
+            height: 620px;
+        }
+
+        .hero h1 {
+            font-size: 3.4rem;
+        }
+
+        .hero p {
+            font-size: 1.65rem;
+            margin-bottom: 26px;
+        }
+
+        .btn-main {
+            max-width: 700px;
+            padding: 20px 34px;
+            font-size: 1.35rem;
+            border-radius: 42px;
+        }
+
+        .logo-track img,
+        .logo-track2 img {
+            height: 120px;
+        }
+
+        .logo-track,
+        .logo-track2 {
+            gap: 60px;
+        }
+
+        .sectionProduits {
+            padding: 0 12px;
+        }
+
+        .el-wrapper {
+            max-width: 720px;
+            margin: 22px auto;
+        }
+
+        .el-wrapper .box-up {
+            height: 500px;
+        }
+
+        .product-card {
+            width: 260px;
+            height: 380px;
+        }
+
+        .product-info h3 {
+            font-size: 1.35rem;
+        }
+
+        .card img {
+            height: 360px;
+        }
+
+        .card-body .titre {
+            font-size: 1.6rem;
+        }
+
+        .card-body .price {
+            font-size: 1.45rem;
+        }
+
+        .cart .price {
+            font-size: 22px;
+        }
+
+        .cart .add-to-cart .txt {
+            font-size: 17px;
+        }
+
+        .foote_bottom_ul_amrc li a {
+            margin: 0 10px;
+        }
+    }
+
+    /* ≤ 576px : maximum lisibilité */
+    @media (max-width: 576px) {
+        .heroRight img {
+            max-height: 700px;
+            height: 700px;
+        }
+
+        .carousel-control-prev,
+        .carousel-control-next {
+            opacity: .98;
+            width: 18%;
+        }
+
+        .logo-track img,
+        .logo-track2 img {
+            height: 130px;
+        }
+
+        .logo-track,
+        .logo-track2 {
+            gap: 64px;
+        }
+
+        .card {
+            margin: 12px;
+        }
+
+        .card img {
+            height: 420px;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .card-body .titre {
+            font-size: 1.75rem;
+        }
+
+        .card-body .price {
+            font-size: 1.55rem;
+        }
+
+        .cart .price {
+            font-size: 24px;
+        }
+
+        .cart .add-to-cart .txt {
+            font-size: 18px;
+        }
+
+        footer {
+            padding: 20px 0 28px;
+        }
+
+        footer p {
+            font-size: 15px;
+        }
+
+        .social_footer_ul li a {
+            width: 46px;
+            height: 46px;
+        }
+    }
+
+    /* accessibilité: réduire animations si demandée */
     @media (prefers-reduced-motion: reduce) {
 
         .logo-track,
@@ -899,6 +904,9 @@
     }
 </style>
 
+<div class="background"></div>
+
+<!-- HERO -->
 <div class="background"></div>
 
 <!-- HERO -->
@@ -922,8 +930,6 @@
                 </div>
                 {% endfor %}
             </div>
-
-            <!-- Controls -->
             <button class="carousel-control-prev" type="button" data-bs-target="#carouselHomePage" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Précédent</span>
@@ -936,7 +942,7 @@
     </div>
 </div>
 
-<!-- Logos défilants -->
+<!-- Logos -->
 <div class="carousselContainer">
     <div class="logo-carousel">
         <div class="logo-track">
@@ -987,7 +993,7 @@
     <section>
         <div class="sectionProduits">
             {% for produit in derniersProduits %}
-            <div class="card" data-id="{{ produit.id }}">
+            <div class="card" data-url="{{ path('app_produit_show', { id: produit.id }) }}">
                 <div class="page-inner">
                     <div class="row">
                         <div class="el-wrapper">
@@ -1021,34 +1027,35 @@
 </section>
 
 <script>
-    const myCarouselElement = document.querySelector('#carouselHomePage')
+    const myCarouselElement = document.querySelector('#carouselHomePage');
     if (myCarouselElement) {
-        const carousel = new bootstrap.Carousel(myCarouselElement, {
-            interval: 3000,
-            ride: 'carousel',
-            touch: true
-        })
+        new bootstrap.Carousel(myCarouselElement, { interval: 3000, ride: 'carousel', touch: true });
     }
 
     document.querySelectorAll('.card').forEach(card => {
-        card.addEventListener('click', () => {
-            const productId = card.getAttribute('data-id');
-            if (productId) window.location.href = `/produit/${productId}`;
+        card.addEventListener('click', (e) => {
+            if (e.target.closest('a')) return; // ne pas intercepter les liens internes
+            const url = card.dataset.url;
+            if (url) window.location.href = url;
         });
     });
 
     document.addEventListener("DOMContentLoaded", () => {
         const cards = document.querySelectorAll(".card");
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add("visible");
-                    observer.unobserve(entry.target);
+        const obs = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.classList.add("visible");
+                    obs.unobserve(e.target);
                 }
             });
         }, { threshold: 0.2 });
-        cards.forEach(card => observer.observe(card));
+        cards.forEach(c => obs.observe(c));
     });
 </script>
+
+
+
+
 
 {% endblock %}

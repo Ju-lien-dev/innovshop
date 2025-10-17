@@ -1,0 +1,24 @@
+<IfModule mod_negotiation.c>
+    Options -MultiViews
+</IfModule>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # IMPORTANT : votre site est servi sous /innovshop
+    RewriteBase /innovshop
+
+    # Ne pas réécrire si le fichier/le dossier existe
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    # Tout le reste vers le front controller
+    RewriteRule ^ index.php [QSA,L]
+
+</IfModule>
+
+# Pour les environnements sans mod_rewrite (fallback Apache)
+
+<IfModule !mod_rewrite.c>
+FallbackResource /innovshop/index.php
+</IfModule>
