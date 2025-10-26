@@ -1,4 +1,45 @@
+{# templates/partials/header.html.twig #}
 <style>
+    :root {
+        --logo-h: 80px;
+        /* desktop */
+        --header-h: 84px;
+        /* desktop (un peu > logo) */
+    }
+
+    @media (max-width: 992px) {
+        :root {
+            --logo-h: 64px;
+            --header-h: 68px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        :root {
+            --logo-h: 56px;
+            --header-h: 60px;
+        }
+    }
+
+    header.site-header {
+        position: relative;
+        z-index: 100;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: .75rem 2rem;
+        background: #fff;
+        min-height: var(--header-h);
+        /* ✅ réserve l’espace */
+    }
+
+    header .logo img {
+        display: block;
+        height: var(--logo-h);
+        /* ✅ contraint le rendu */
+        width: auto;
+    }
+
     /* ====== Style existant ====== */
     nav ul li a {
         position: relative;
@@ -55,15 +96,13 @@
         line-height: 22px;
         justify-content: center;
         align-items: center;
+        transition: opacity .2s ease, visibility .2s ease;
     }
 
-    header.site-header {
-        position: relative;
-        z-index: 100;
-    }
-
-    header .logo img {
-        display: block;
+    /* ✅ Réserver l’espace même si panier vide */
+    .cart-badge.is-empty {
+        opacity: 0;
+        visibility: hidden;
     }
 
     .hamburger {
@@ -134,12 +173,7 @@
         }
 
         header.site-header {
-            height: auto !important;
             padding: .75rem 1rem !important;
-        }
-
-        header .logo img {
-            height: 64px !important;
         }
 
         header.site-header nav {
@@ -177,14 +211,12 @@
             transition: color 0.25s ease, transform 0.25s ease, opacity 0.25s ease;
         }
 
-        /* Effet cohérent au survol dans le menu burger */
         header.site-header nav ul li a:hover {
             transform: translateX(6px);
             color: #555;
-            opacity: 0.85;
+            opacity: .85;
         }
 
-        /* Neutralise l'ancien hover desktop */
         header.site-header nav ul li a:hover span {
             transform: none;
             opacity: 1;
@@ -197,10 +229,6 @@
     }
 
     @media (max-width: 576px) {
-        header .logo img {
-            height: 56px !important;
-        }
-
         .cart-badge {
             min-width: 20px;
             height: 20px;
@@ -220,17 +248,17 @@
     }
 </style>
 
-<header class="site-header"
-    style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; background: #fff; height: 50px;">
+<header class="site-header">
     <div class="logo">
-        <a href="{{ path('app_front') }}"
-            style="text-decoration: none; font-weight: bold; font-size: 1.5rem; color: #333;">
-            <img src="{{ asset('logo/logo_innovshop_transparent.png') }}" alt="InnovShop logo" style="height: 90px;">
+        {# ✅ width/height HTML renseignés pour bloquer l’espace (ajuste si besoin à la vraie taille source) #}
+        <a href="{{ path('app_front') }}" style="text-decoration:none; font-weight:bold; font-size:1.5rem; color:#333;">
+            <img src="{{ asset('logo/logo_innovshop_transparent.png') }}" alt="InnovShop logo" width="800" height="240"
+                {# <— mets ici la vraie taille du fichier si tu la connais #} decoding="async" loading="eager">
         </a>
     </div>
 
     <nav id="mainNav" aria-label="Navigation principale">
-        <ul style="list-style: none; display: flex; gap: 1.5rem; margin: 0; padding: 0;">
+        <ul style="list-style:none; display:flex; gap:1.5rem; margin:0; padding:0;">
             <li><a href="{{ path('app_front') }}" data-text="Accueil"><span>Accueil</span></a></li>
 
             {% if app.user and 'ROLE_USER' in app.user.roles %}
@@ -244,9 +272,11 @@
                 <a href="{{ path('app_cart') }}" data-text="Panier {% if cart_count > 0 %}{{ cart_count }}{% endif %}"
                     class="cart-link">
                     <span>Panier</span>
-                    {% if cart_count > 0 %}
-                    <span class="cart-badge">{{ cart_count }}</span>
-                    {% endif %}
+                    {# ✅ on rend TOUJOURS le badge pour réserver l’espace #}
+                    {% set has_items = (cart_count is defined and cart_count > 0) %}
+                    <span class="cart-badge {{ has_items ? '' : 'is-empty' }}">
+                        {{ has_items ? cart_count : '0' }}
+                    </span>
                 </a>
             </li>
 

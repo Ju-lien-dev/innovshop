@@ -17,6 +17,7 @@
         height: 1rem;
         background: var(--footer-background);
         filter: url("#blob");
+        will-change: transform, opacity;
     }
 
     .footer .bubbles .bubble {
@@ -27,12 +28,12 @@
         animation: bubble-size var(--time, 4s) ease-in infinite var(--delay, 0s),
             bubble-move var(--time, 4s) ease-in infinite var(--delay, 0s);
         transform: translate(-50%, 100%);
+        will-change: transform, width, height;
     }
 
     .footer .content {
         z-index: 2;
         display: grid;
-        /* une seule zone, on gère les 3 colonnes à l'intérieur */
         grid-template-columns: 1fr;
         grid-gap: 2rem;
         padding: 2rem;
@@ -68,7 +69,6 @@
         margin-right: .5rem;
     }
 
-    /* --- 3 colonnes de liens --- */
     .links-wrap {
         display: grid;
         grid-template-columns: repeat(3, minmax(160px, 1fr));
@@ -86,7 +86,6 @@
         margin: .15rem 0;
     }
 
-    /* optionnel: un léger ajustement responsive */
     @media (max-width: 720px) {
         .links-wrap {
             grid-template-columns: 1fr 1fr;
@@ -122,9 +121,16 @@
             bottom: var(--distance, 10rem);
         }
     }
-</style>
 
-<div class="main"></div>
+    /* Réduit/neutralise l’anim si l’utilisateur préfère */
+    @media (prefers-reduced-motion: reduce) {
+
+        .footer .bubbles,
+        .footer .bubbles .bubble {
+            animation: none !important;
+        }
+    }
+</style>
 
 <div class="footer">
     <div class="bubbles">
@@ -138,7 +144,6 @@
             <div><b>InnovShop</b></div>
 
             <div class="links-wrap">
-                <!-- Colonne 1 -->
                 <div class="link-col">
                     <b>Informations</b>
                     <a href="{{ path('mentions_legales') }}">Mentions légales</a>
@@ -146,7 +151,6 @@
                     <a href="{{ path('confidentialite') }}">Politique de confidentialité</a>
                 </div>
 
-                <!-- Colonne 2 -->
                 <div class="link-col">
                     <b>Service client</b>
                     <a href="{{ path('service_contact') }}">Contact & SAV</a>
@@ -154,7 +158,6 @@
                     <a href="{{ path('service_retours_retractation') }}">Retours & droit de rétractation</a>
                 </div>
 
-                <!-- Colonne 3 -->
                 <div class="link-col">
                     <b>À propos</b>
                     <a href="{{ path('a_propos') }}">Qui sommes-nous</a>
@@ -167,14 +170,17 @@
     </div>
 </div>
 
-<svg style="position:fixed; top:100vh">
+{# ⚠️ Le filtre SVG doit exister mais ne doit pas influencer la mise en page #}
+<svg aria-hidden="true" focusable="false"
+    style="position:absolute; width:0; height:0; overflow:hidden; pointer-events:none;">
     <defs>
         <filter id="blob">
             <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
-            <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  
-        0 1 0 0 0  
-        0 0 1 0 0  
-        0 0 0 19 -9" result="blob" />
+            <feColorMatrix in="blur" mode="matrix" values="
+                1 0 0 0 0
+                0 1 0 0 0
+                0 0 1 0 0
+                0 0 0 19 -9" result="blob" />
         </filter>
     </defs>
 </svg>

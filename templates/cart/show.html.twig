@@ -14,12 +14,25 @@
 {% endif %}
 
 <style>
+  .background {
+    background: #fff;
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden
+  }
+
+  /* Stabilise la présence de la barre de scroll (évite le “saut”) */
+  html {
+    overflow-y: scroll;
+  }
+
+
   /* ===== Panier (scopé) ===== */
   #cartfx {
     --ink: #111827;
     --muted: #6b7280;
     --bg: #ffffff;
-    /* fond blanc partout */
     --border: rgba(17, 24, 39, .10);
     --shadow: 0 16px 40px rgba(2, 6, 23, .08);
     color: var(--ink);
@@ -30,6 +43,8 @@
     max-width: 1100px;
     margin: 40px auto;
     padding: 0 16px;
+    /* Réserve une hauteur mini pour éviter CLS lors du rendu footer */
+    min-height: 60svh;
   }
 
   #cartfx .shell {
@@ -42,17 +57,6 @@
     #cartfx .shell {
       grid-template-columns: 1fr;
     }
-  }
-
-  .background {
-    background-color: #fff;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    overflow: hidden;
   }
 
   /* cartes blanches */
@@ -91,13 +95,11 @@
     padding: 8px 10px 14px;
   }
 
-  /* ligne produit en CSS Grid avec zones → hyper responsive */
+  /* ligne produit */
   #cartfx .line {
     display: grid;
     grid-template-columns: 72px 1fr auto auto;
-    grid-template-areas:
-      "img info qty price"
-      ".   rm   rm  rm";
+    grid-template-areas: "img info qty price" ". rm rm rm";
     align-items: center;
     gap: 12px;
     padding: 14px;
@@ -154,9 +156,11 @@
     justify-self: end;
   }
 
+  /* vignettes : réservez l’espace pour éviter toute mise à jour de layout */
   #cartfx .thumb {
     width: 64px;
     height: 64px;
+    aspect-ratio: 1 / 1;
     border-radius: 12px;
     object-fit: cover;
     border: 1px solid var(--border);
@@ -208,17 +212,14 @@
   }
 
   #cartfx .rm button {
-    border: 1px solid var(--border);
+    border: 1px solid #333;
     background: #fff;
     color: var(--ink);
     padding: 8px 12px;
     border-radius: 20px;
     cursor: pointer;
-    transition: background 0.2s;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-    border: 1px solid #333;
-    animation: fadeInUp 1s ease-out forwards;
-    animation-delay: 1s;
+    transition: background .2s, color .2s;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, .15);
   }
 
   #cartfx .rm button:hover {
@@ -289,25 +290,19 @@
     text-align: center;
     border-radius: 25px;
     text-decoration: none;
-    transition: background 0.2s;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    transition: background .2s, color .2s, filter .2s, border-color .2s;
     border: 1px solid #333;
-    animation: fadeInUp 1s ease-out forwards;
-    animation-delay: 1s;
-
+    box-shadow: 0 8px 20px rgba(0, 0, 0, .15);
   }
 
   #cartfx .sum-btn:hover {
     filter: brightness(.96);
-    text-decoration: none;
     color: #333;
-    background: #ffffff;
-    border: 1px solid #333;
+    background: #fff;
+    border-color: #333;
   }
 </style>
-
 <div class="background"></div>
-
 <div id="cartfx">
   <div class="wrap">
     <div class="shell">
@@ -332,7 +327,8 @@
           <div class="line">
             <div class="c-img">
               <img class="thumb" src="{{ asset('images/' ~ (items.image[i]|default('default.png'))) }}"
-                alt="{{ items.nom_produit[i]|default('Produit') }}">
+                alt="{{ items.nom_produit[i]|default('Produit') }}" width="64" height="64" loading="eager"
+                decoding="async">
             </div>
 
             <div class="c-info">
@@ -387,9 +383,6 @@
         <form action="{{ path('app_checkout_review') }}" method="GET">
           <button class="sum-btn" type="submit">Finaliser mon achat</button>
         </form>
-        <!-- <form action="/create-checkout-session" method="POST">
-          <button class="sum-btn" type="submit">Procéder au paiement</button>
-        </form> -->
       </aside>
 
     </div>

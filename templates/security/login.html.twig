@@ -6,51 +6,43 @@
 {% block stylesheets %}
 {{ parent() }}
 <style>
-    /* Palette cohérente avec le site */
     :root {
         --ink: #333;
-        /* texte principal & CTA */
         --ink-soft: #555;
-        /* labels / texte secondaire */
         --muted: #777;
-        /* onglets inactifs */
         --bg-soft: rgb(243, 241, 238);
-        /* fond panneaux */
         --border: #e8e8e8;
-        /* traits et bordures */
         --focus: rgba(51, 51, 51, .16);
-        /* halo focus */
         --placeholder: #9aa0a6;
-        /* placeholders */
-        --shadow: 0 12px 15px rgba(0, 0, 0, .24), 0 17px 50px rgba(0, 0, 0, .19);
+        --shadow: 0 12px 15px rgba(0, 0, 0, .24), 0 17px 50px rgba(0, 0, 0, .19)
     }
 
     .background {
-        background-color: #fff;
+        background: #fff;
         position: fixed;
         inset: 0;
         z-index: -1;
-        overflow: hidden;
-    }
-
-    .row {
-        margin-top: 20px;
-        display: flex;
-        justify-content: center;
+        overflow: hidden
     }
 
     body {
         margin: 0;
         color: var(--ink-soft);
         background: #c8c8c8;
-        font: 600 16px/18px 'Open Sans', sans-serif;
+        font: 600 16px/18px 'Open Sans', sans-serif
+    }
+
+    .row {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center
     }
 
     .card {
         width: 500px;
         left: 100px;
         background: transparent;
-        border: none;
+        border: none
     }
 
     .login-box {
@@ -59,18 +51,18 @@
         max-width: 525px;
         min-height: 670px;
         position: relative;
-        background: url(https://images.unsplash.com/photo-1507208773393-40d9fc670acf?ixlib=rb-1.2.1&auto=format&fit=crop&w=1268&q=80) no-repeat center/cover;
+        background: url(https://images.unsplash.com/photo-1507208773393-40d9fc670acf?auto=format&fit=crop&w=1268&q=80) no-repeat center/cover;
         box-shadow: var(--shadow);
         border-radius: 10px;
-        overflow: hidden;
+        overflow: hidden
     }
 
     .login-snip {
         position: absolute;
         inset: 0;
-        padding: 90px 70px 50px 70px;
+        padding: 90px 70px 50px;
         background: var(--bg-soft);
-        color: var(--ink);
+        color: var(--ink)
     }
 
     /* Onglets */
@@ -81,14 +73,13 @@
         padding-bottom: 5px;
         display: inline-block;
         border-bottom: 2px solid transparent;
-        cursor: pointer;
+        cursor: pointer
     }
 
     .login-snip .sign-in:checked+.tab,
     .login-snip .sign-up:checked+.tab {
         color: var(--ink);
-        border-color: var(--ink);
-        /* soulignement #333 */
+        border-color: var(--ink)
     }
 
     /* Panneaux */
@@ -98,40 +89,39 @@
         inset: 0;
         transform: rotateY(180deg);
         backface-visibility: hidden;
-        transition: all .4s linear;
+        transition: all .4s linear
     }
 
     .login-snip .sign-in,
-    .login-snip .sign-up,
-    .login-space .group .check {
-        display: none;
+    .login-snip .sign-up {
+        display: none
     }
 
     .login-snip .sign-in:checked+.tab+.sign-up+.tab+.login-space .login {
-        transform: rotate(0);
+        transform: rotate(0)
     }
 
     .login-snip .sign-up:checked+.tab+.login-space .sign-up-form {
-        transform: rotate(0);
+        transform: rotate(0)
     }
 
     .login-space {
         min-height: 345px;
         position: relative;
         perspective: 1000px;
-        transform-style: preserve-3d;
+        transform-style: preserve-3d
     }
 
     .login-space .group {
-        margin-bottom: 15px;
+        margin-bottom: 15px
     }
 
-    /* Champs & labels */
+    /* Labels & champs */
     .login-space .group .label {
         width: 100%;
         display: block;
         color: var(--ink-soft);
-        font-size: 12px;
+        font-size: 12px
     }
 
     .login-space .group .input {
@@ -142,22 +132,17 @@
         border-radius: 25px;
         background: #fff;
         border: 1px solid var(--border);
-        transition: box-shadow .15s ease, border-color .15s ease;
-    }
-
-    .login-space .group input[data-type="password"] {
-        text-security: circle;
-        -webkit-text-security: circle;
+        transition: box-shadow .15s ease, border-color .15s ease
     }
 
     .login-space .group .input:focus {
         outline: none;
         border-color: var(--ink);
-        box-shadow: 0 0 0 3px var(--focus);
+        box-shadow: 0 0 0 3px var(--focus)
     }
 
     ::placeholder {
-        color: var(--placeholder);
+        color: var(--placeholder)
     }
 
     /* CTA */
@@ -171,173 +156,173 @@
         border-radius: 25px;
         background: var(--ink);
         transition: filter .15s ease, transform .06s ease;
-        cursor: pointer;
+        cursor: pointer
     }
 
     .login-space .group .button:hover {
-        filter: brightness(1.06);
+        filter: brightness(1.06)
     }
 
     .login-space .group .button:active {
-        transform: translateY(1px);
-    }
-
-    /* Checkbox custom */
-    .login-space .group label .icon {
-        width: 15px;
-        height: 15px;
-        border-radius: 2px;
-        position: relative;
-        display: inline-block;
-        background: #fff;
-        border: 1px solid var(--border);
-    }
-
-    .login-space .group label .icon:before,
-    .login-space .group label .icon:after {
-        content: '';
-        position: absolute;
-        background: #fff;
-        transition: all .2s ease-in-out;
-        width: 10px;
-        height: 2px;
-        left: 2px;
-    }
-
-    .login-space .group label .icon:before {
-        bottom: 6px;
-        width: 5px;
-        transform: scale(0) rotate(0);
-    }
-
-    .login-space .group label .icon:after {
-        top: 6px;
-        right: 2px;
-        transform: scale(0) rotate(0);
-    }
-
-    .login-space .group .check:checked+label {
-        color: var(--ink);
-    }
-
-    .login-space .group .check:checked+label .icon {
-        background: var(--ink);
-        border-color: var(--ink);
-    }
-
-    .login-space .group .check:checked+label .icon:before {
-        transform: scale(1) rotate(45deg);
-    }
-
-    .login-space .group .check:checked+label .icon:after {
-        transform: scale(1) rotate(-45deg);
+        transform: translateY(1px)
     }
 
     .hr {
         height: 2px;
         margin: 60px 0 50px;
-        background: rgba(0, 0, 0, .06);
+        background: rgba(0, 0, 0, .06)
     }
 
     .foot {
         text-align: center;
-        color: var(--ink);
+        color: var(--ink)
     }
 
-    /* ======= RWD ======= */
+    /* Checkbox CGU custom & visible */
+    .auth-form .group-check {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 6px 0 14px
+    }
+
+    .auth-form .group-check .checkbox {
+        appearance: none;
+        width: 18px;
+        height: 18px;
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        background: #fff;
+        position: relative;
+        cursor: pointer
+    }
+
+    .auth-form .group-check .checkbox:checked {
+        background: var(--ink);
+        border-color: var(--ink)
+    }
+
+    .auth-form .group-check .checkbox:checked::after {
+        content: "";
+        position: absolute;
+        left: 4px;
+        top: 1px;
+        width: 6px;
+        height: 10px;
+        border: 2px solid #fff;
+        border-top: 0;
+        border-left: 0;
+        transform: rotate(45deg)
+    }
+
+    .auth-form .group-check .label {
+        margin: 0;
+        font-size: 12px;
+        color: var(--ink-soft);
+        cursor: pointer
+    }
+
+    .auth-form .group-check .form-error-message {
+        display: block;
+        margin-left: 28px;
+        color: #dc3545;
+        font-size: 12px
+    }
+
+    /* RWD */
     @media (max-width:1200px) {
         .login-snip {
-            padding: 70px 54px 46px;
+            padding: 70px 54px 46px
         }
     }
 
     @media (max-width:992px) {
         .row {
-            padding: 0 12px;
+            padding: 0 12px
         }
 
         .card {
             width: 100%;
             max-width: 560px;
             left: auto;
-            margin: 0 auto;
+            margin: 0 auto
         }
 
         .login-box {
-            min-height: 620px;
+            min-height: 620px
         }
 
         .login-snip {
-            padding: 56px 40px 38px;
+            padding: 56px 40px 38px
         }
 
         .login-snip .tab {
-            font-size: 20px;
+            font-size: 20px
         }
     }
 
     @media (max-width:768px) {
         .row {
-            margin-top: 14px;
+            margin-top: 14px
         }
 
         .login-box {
-            min-height: 560px;
+            min-height: 560px
         }
 
         .login-snip {
-            padding: 44px 26px 30px;
+            padding: 44px 26px 30px
         }
 
         .login-space .group {
-            margin-bottom: 13px;
+            margin-bottom: 13px
         }
 
         .login-space .group .input,
         .login-space .group .button {
-            padding: 14px 18px;
+            padding: 14px 18px
         }
 
         .login-snip .tab {
-            font-size: 19px;
+            font-size: 19px
         }
 
         .hr {
-            margin: 36px 0 28px;
+            margin: 36px 0 28px
         }
     }
 
     @media (max-width:576px) {
         .row {
-            padding: 0 8px;
+            padding: 0 8px
         }
 
         .login-box {
             min-height: 520px;
-            border-radius: 8px;
+            border-radius: 8px
         }
 
         .login-snip {
-            padding: 32px 18px 24px;
+            padding: 32px 18px 24px
         }
 
         .login-snip .tab {
             font-size: 18px;
-            margin-right: 12px;
+            margin-right: 12px
         }
 
         .login-space .group .label {
-            font-size: 11px;
+            font-size: 11px
         }
 
         .login-space .group .input,
         .login-space .group .button {
-            padding: 13px 16px;
+            padding: 13px 16px
         }
 
         .foot label {
             display: inline-block;
-            padding: 6px 10px;
+            padding: 6px 10px
         }
     }
 
@@ -345,7 +330,7 @@
 
         .login-snip .login,
         .login-snip .sign-up-form {
-            transition: none;
+            transition: none
         }
     }
 </style>
@@ -354,18 +339,18 @@
 {% block body %}
 <div class="background"></div>
 
-{# Alerte d'erreur (safe si "error" non défini) #}
+{# Alerte erreur connexion (si définie) #}
 {% if error is defined and error %}
-<div class="alert alert-danger">
+<div class="alert alert-danger m-3">
     {{ error.messageKey|trans(error.messageData, 'security') }}
 </div>
 {% endif %}
 
-{# Info déjà connecté #}
+{# Déjà connecté #}
 {% if app.user %}
-<div class="alert alert-info">
-    Déjà connecté en tant que <strong>{{ app.user.userIdentifier }}</strong>.
-    <a href="{{ path('app_logout') }}">Se déconnecter</a>
+<div class="alert alert-info m-3">
+    Déjà connecté en tant que <strong>{{ app.user.userIdentifier }}</strong>. <a href="{{ path('app_logout') }}">Se
+        déconnecter</a>
 </div>
 {% endif %}
 
@@ -375,49 +360,53 @@
             <div class="login-box">
                 <div class="login-snip">
 
-                    {# Onglet Connexion (toujours présent) #}
-                    <input id="tab-1" type="radio" name="tab" class="sign-in" checked>
+                    {# ==== Onglets ==== #}
+                    {% set tab = activeTab|default(app.request.get('tab')) %}
+                    <input id="tab-1" type="radio" name="tab" class="sign-in" {{ tab !='signup' ? 'checked' }}>
                     <label for="tab-1" class="tab">Connexion</label>
 
-                    {# Onglet S'enregistrer : seulement si registrationForm est fourni #}
                     {% if registrationForm is defined %}
-                    <input id="tab-2" type="radio" name="tab" class="sign-up">
+                    <input id="tab-2" type="radio" name="tab" class="sign-up" {{ tab=='signup' ? 'checked' }}>
                     <label for="tab-2" class="tab">S'enregistrer</label>
                     {% endif %}
 
                     <div class="login-space">
-                        {# --- Formulaire de connexion --- #}
+
+                        {# ===== Connexion ===== #}
                         <form method="post" action="{{ path('app_login') }}">
                             <div class="login">
                                 <div class="group">
                                     <label for="user" class="label">Email</label>
-                                    <input id="user" type="email" class="input" name="_username"
+                                    <input id="user" type="email" class="input" name="email"
                                         placeholder="Renseignez votre email" value="{{ last_username|default('') }}"
                                         required autofocus>
                                 </div>
 
                                 <div class="group">
                                     <label for="pass" class="label">Mot de passe</label>
-                                    <input id="pass" type="password" class="input" name="_password"
+                                    <input id="pass" type="password" class="input" name="password"
                                         placeholder="Renseignez votre mot de passe" autocomplete="current-password"
                                         required>
                                 </div>
 
                                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-
+                                <div class="group">
+                                    <input type="checkbox" id="remember_me" name="_remember_me" value="on">
+                                    <label for="remember_me">Se souvenir de moi</label>
+                                </div>
 
                                 <div class="group">
-                                    <input type="submit" class="button" value="Se connecter">
+                                    <button type="submit" class="button">Se connecter</button>
                                 </div>
                             </div>
                         </form>
 
-                        {# --- Formulaire d'inscription (optionnel) --- #}
+                        {# ===== Inscription ===== #}
                         {% if registrationForm is defined %}
                         <div class="sign-up-form">
                             {% if not registrationForm.vars.valid %}
-                            <div class="form-errors">
+                            <div class="form-errors mb-3">
                                 {{ form_errors(registrationForm) }}
                             </div>
                             {% endif %}
@@ -429,21 +418,36 @@
 
                             <div class="group">
                                 {{ form_label(registrationForm.email, 'Email', {'label_attr': {'class': 'label'}}) }}
-                                {{ form_widget(registrationForm.email, {'attr': {'class': 'input', 'placeholder':
-                                "Renseignez votre email"}}) }}
+                                {{ form_widget(registrationForm.email, {
+                                attr: { class: 'input', placeholder: 'Renseignez votre email' }
+                                }) }}
                                 {{ form_errors(registrationForm.email) }}
                             </div>
 
                             <div class="group">
                                 {{ form_label(registrationForm.plainPassword, 'Mot de passe', {'label_attr': {'class':
                                 'label'}}) }}
-                                {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'input',
-                                'placeholder': "Créez votre mot de passe"}}) }}
+                                {{ form_widget(registrationForm.plainPassword, {
+                                attr: { class: 'input', placeholder: 'Créez votre mot de passe' }
+                                }) }}
                                 {{ form_errors(registrationForm.plainPassword) }}
                             </div>
 
+                            {# CGU — FR, cliquable, visible #}
+                            <div class="group group-check">
+                                {{ form_widget(registrationForm.agreeTerms, {
+                                attr: { class: 'checkbox', id: 'agree_terms' }
+                                }) }}
+                                <label class="label" for="agree_terms">
+                                    J’accepte la
+                                    <a href="{{ path('confidentialite') }}" target="_blank" rel="noopener">Politique de
+                                        confidentialité</a>.
+                                </label>
+                                {{ form_errors(registrationForm.agreeTerms) }}
+                            </div>
+
                             <div class="group">
-                                <input type="submit" class="button" value="S'enregistrer">
+                                <button type="submit" class="button">S'enregistrer</button>
                             </div>
 
                             {{ form_end(registrationForm) }}
@@ -454,14 +458,13 @@
                             </div>
                         </div>
                         {% else %}
-                        {# Si pas de registrationForm, propose un lien (optionnel) #}
                         <div class="hr"></div>
                         <div class="foot">
                             <a href="{{ path('app_register') }}">Créer un compte</a>
                         </div>
                         {% endif %}
-                    </div><!-- /.login-space -->
 
+                    </div><!-- /.login-space -->
                 </div><!-- /.login-snip -->
             </div><!-- /.login-box -->
         </div><!-- /.card -->

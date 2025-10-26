@@ -5,8 +5,6 @@ namespace App\Controller\Admin;
 use App\Entity\Adresse;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class AdresseCrudController extends AbstractCrudController
@@ -15,30 +13,41 @@ class AdresseCrudController extends AbstractCrudController
     {
         return Adresse::class;
     }
+
     public function configureFields(string $pageName): iterable
     {
-        yield ChoiceField::new('type', 'Type')
+        /** @var ChoiceField $type */
+        $type = ChoiceField::new('type', 'Type');
+        $type
             ->setChoices([
                 'Travail'  => 'work',
                 'Domicile' => 'home',
                 'Autre'    => 'other',
             ])
             ->allowMultipleChoices(false)
-            ->renderExpanded(false) // select
+            ->renderExpanded(false)
             ->setRequired(true);
 
-        yield TextField::new('nom', 'Nom')
-            ->setRequired(true);
+        /** @var TextField $nom */
+        $nom = TextField::new('nom', 'Nom');
+        $nom->setRequired(true);
 
-        yield TextField::new('adresse', 'Adresse')
-            ->setRequired(true);
+        /** @var TextField $adresse */
+        $adresse = TextField::new('adresse', 'Adresse');
+        $adresse->setRequired(true);
 
-        yield TextField::new('ville', 'Ville')
-            ->setRequired(true);
+        /** @var TextField $ville */
+        $ville = TextField::new('ville', 'Ville');
+        $ville->setRequired(true);
 
-        // TextField pour garder les zéros éventuels et contrôler la longueur (FR = 5)
-        yield TextField::new('codePostal', 'Code Postal')
-            ->setMaxLength(5)
-            ->setRequired(true);
+        /** @var TextField $codePostal */
+        $codePostal = TextField::new('codePostal', 'Code Postal');
+        $codePostal->setMaxLength(5)->setRequired(true);
+
+        yield $type;
+        yield $nom;
+        yield $adresse;
+        yield $ville;
+        yield $codePostal;
     }
 }

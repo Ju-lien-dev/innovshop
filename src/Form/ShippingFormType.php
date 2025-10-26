@@ -64,12 +64,10 @@ final class ShippingFormType extends AbstractType
                 'required' => false,
             ])
             ->add('accept', T\CheckboxType::class, [
-                'label' => "J'accepte les CGV",
+                'label' => "J'accepte les <a href='/innovshop/cgv' target='_blank'>conditions générales de vente</a>",
+                'label_html' => true,
                 'constraints' => [new Assert\IsTrue(message: 'Vous devez accepter les CGV')],
             ])
-            ->add('submit', T\SubmitType::class, [
-                'label' => 'Continuer vers le paiement',
-                'attr'  => ['class' => 'sum-btn'],
-            ]);
+        ;
     }
 }

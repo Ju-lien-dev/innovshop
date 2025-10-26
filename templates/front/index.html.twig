@@ -9,8 +9,7 @@
     /* ====== Desktop (inchangé) ====== */
     h2 {
         text-align: center;
-        margin-bottom: 40px;
-        margin-top: 30px;
+        margin: 30px 0 40px;
     }
 
     .background {
@@ -23,12 +22,11 @@
 
     /* Hero */
     .hero {
-        margin-top: 10px;
+        margin: 10px 0 50px;
         display: flex;
         text-align: center;
         background: rgb(243, 241, 238);
         color: #333;
-        margin-bottom: 50px;
         height: 500px;
     }
 
@@ -154,6 +152,29 @@
         gap: 20px;
     }
 
+    .card {
+        margin: 10px;
+        display: flex;
+        width: auto;
+        overflow: hidden;
+        opacity: 0;
+        transform: translateY(40px);
+        transition: opacity 1.2s ease-out, transform 1.2s ease-out;
+        color: #333;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 80%;
+        border: 1px solid #eee;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, .05);
+        background: #fff;
+    }
+
+    .card.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
     .card:hover {
         transform: translateY(-5px);
         box-shadow: 0 8px 20px rgba(0, 0, 0, .15);
@@ -171,6 +192,7 @@
         display: flex;
         flex-direction: column;
         flex-grow: 1;
+        height: 100px;
     }
 
     .card-body h5 {
@@ -220,21 +242,6 @@
         margin-bottom: 50px;
     }
 
-    .card {
-        margin: 10px;
-        display: flex;
-        width: auto;
-        overflow: hidden;
-        opacity: 0;
-        transform: translateY(40px);
-        transition: opacity 1.2s ease-out, transform 1.2s ease-out;
-    }
-
-    .card.visible {
-        opacity: 1;
-        transform: translateY(0);
-    }
-
     .el-wrapper {
         width: 360px;
         background: #fff;
@@ -251,35 +258,6 @@
             width: 290px;
             margin: 30px auto;
         }
-    }
-
-    .el-wrapper:hover .h-bg {
-        left: 0;
-    }
-
-    .el-wrapper:hover .price {
-        left: 20px;
-        transform: translateY(-50%);
-        color: #818181;
-    }
-
-    .el-wrapper:hover .add-to-cart {
-        left: 50%;
-    }
-
-    .el-wrapper:hover .img {
-        filter: blur(7px);
-        opacity: .4;
-    }
-
-    .el-wrapper:hover .info-inner {
-        bottom: 155px;
-    }
-
-    .el-wrapper:hover .a-size {
-        transition-delay: 300ms;
-        bottom: 50px;
-        opacity: 1;
     }
 
     .el-wrapper .box-down {
@@ -314,41 +292,6 @@
         width: 50%;
         height: 100%;
         background: #333;
-    }
-
-    .info-inner {
-        transition: all 400ms cubic-bezier(0, 0, 0.18, 1);
-        position: absolute;
-        width: 100%;
-        bottom: 25px;
-    }
-
-    .info-inner .p-name {
-        margin-bottom: 10px;
-        font-family: 'PT Sans', sans-serif;
-        font-size: 18px;
-        color: #252525;
-    }
-
-    .info-inner .p-company {
-        font-family: 'Lato', sans-serif;
-        font-size: 12px;
-        text-transform: uppercase;
-        color: #8c8c8c;
-    }
-
-    .a-size {
-        transition: all 300ms cubic-bezier(0, 0, 0.18, 1);
-        position: absolute;
-        width: 100%;
-        bottom: -20px;
-        font-family: 'PT Sans', sans-serif;
-        color: #828282;
-        opacity: 0;
-    }
-
-    .a-size .size {
-        color: #252525;
     }
 
     .cart {
@@ -388,140 +331,80 @@
         white-space: nowrap;
     }
 
-    /* Populaires */
-    .produitsPop {
-        position: relative;
-        min-height: 380px;
-        overflow: hidden;
-    }
-
-    .backgroundProduitsPop {
-        background: #333;
-        width: 45%;
-        height: 80%;
+    /* ======= Overlay lisible + line-clamp standard ======= */
+    .el-wrapper .img-info {
         position: absolute;
-        top: 20%;
-        right: 0;
-        z-index: -1;
-        border-radius: 0 25px 0 0;
-        opacity: 0;
-        transition: opacity 2.6s ease-out 1s, transform 2.6s ease-out 1s;
-    }
-
-    .backgroundProduitsPop.visible {
-        opacity: 1;
-        transform: scale(1);
-    }
-
-    .product-carousel {
-        display: flex;
-        justify-content: space-evenly;
-        height: 100%;
-        width: 100%;
-        background: transparent;
-    }
-
-    .wrapper {
-        display: flex;
-        gap: 20px;
-        overflow-x: auto;
-        scroll-behavior: smooth;
-        padding-bottom: 10px;
-        z-index: 1;
-    }
-
-    .product-card {
-        position: relative;
-        border-radius: 20px;
-        width: 200px;
-        height: 300px;
+        inset: 0;
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
-        background: #fff;
-        opacity: 0;
-        transform: scale(.98);
-        transition: opacity 2.6s ease-out, transform 2.6s ease-out;
-        z-index: 1;
-    }
-
-    .product-card.visible {
+        padding: 14px 16px;
+        pointer-events: none;
         opacity: 1;
-        transform: scale(1);
     }
 
-    .product-card:hover {
-        box-shadow: 0 6px 20px rgba(0, 0, 0, .08);
+    .el-wrapper .img-info::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 45%, rgba(255, 255, 255, .96) 100%);
     }
 
-    .product-card img:hover {
-        filter: brightness(.9);
+    .el-wrapper .info-inner,
+    .el-wrapper .a-size {
+        position: relative !important;
+        bottom: auto !important;
+        z-index: 1;
+        opacity: 1;
     }
 
-    .product-card img {
-        width: 100%;
-        height: 70%;
-        object-fit: cover;
-    }
-
-    .product-info {
-        padding: 15px;
-        text-align: center;
-    }
-
-    .product-info h3 {
-        font-size: 1rem;
-        font-weight: bold;
-        margin: 0;
-        color: #333;
-    }
-
-    .card {
-        color: #333;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        height: 80%;
-        border: 1px solid #eee;
-        border-radius: 10px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, .05);
-        background: #fff;
+    /* Titre visible en permanence (1 ligne) */
+    .info-inner .p-name {
+        margin: 0 0 6px;
+        font-weight: 700;
+        color: #111;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 1;
+        line-clamp: 1;
+        /* non prefixé pour l’analyseur */
         overflow: hidden;
-        transition: transform .2s ease, box-shadow .2s ease;
+        font-family: 'PT Sans', sans-serif;
+        font-size: 18px;
     }
 
-    .card:hover {
-        box-shadow: 0 8px 20px rgba(0, 0, 0, .15);
+    /* Sous-texte (2 lignes max), révélé au hover */
+    .a-size {
+        margin: 0;
+        color: #666;
+        pointer-events: none;
+        overflow: hidden;
+        max-height: 0;
+        opacity: 0;
+        transform: translateY(6px);
+        transition: max-height .35s ease, opacity .35s ease, transform .35s ease;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        /* non prefixé pour l’analyseur */
+        font-family: 'PT Sans', sans-serif;
     }
 
-    .card img {
-        width: 100%;
-        height: 180px;
-        object-fit: cover;
+    .el-wrapper:hover .a-size {
+        max-height: 3.2em;
+        opacity: 1;
+        transform: translateY(0);
     }
 
-    .card-body {
-        height: 100px;
-        display: flex;
-        flex-direction: column;
-        flex-grow: 1;
-        padding: 15px;
+    /* Effet image doux au survol */
+    .el-wrapper:hover .img {
+        filter: blur(2px) brightness(0.97);
+        opacity: 1;
     }
 
-    .card-body .titre {
-        font-weight: bold;
-        margin-bottom: 8px;
-        font-size: 1.1rem;
-        color: #333;
-    }
-
-    .card-body .price {
-        font-weight: bold;
-        margin-top: auto;
-        margin-bottom: 10px;
-        color: #333;
-    }
-
+    /* Bouton principal */
     .btn-main {
         width: 200px;
         background: #333;
@@ -625,10 +508,8 @@
         height: 36px;
     }
 
-    /* ====== RWD XXL mobile ====== */
-
-    /* ≤ 992px : structure en colonne + déjà grand */
-    @media (max-width: 992px) {
+    /* ====== RWD ====== */
+    @media (max-width:992px) {
         .hero {
             flex-direction: column-reverse;
             height: auto;
@@ -713,30 +594,12 @@
         .card-body .price {
             font-size: 1.35rem;
         }
-
-        .info-inner .p-name {
-            font-size: 24px;
-        }
-
-        .a-size {
-            font-size: 16px;
-        }
-
-        .cart .price {
-            font-size: 20px;
-        }
-
-        .cart .add-to-cart .txt {
-            font-size: 16px;
-        }
     }
 
-    /* ≤ 768px : très grand pour téléphone */
-    @media (max-width: 768px) {
+    @media (max-width:768px) {
         h2 {
             font-size: 2.6rem;
-            margin-top: 28px;
-            margin-bottom: 28px;
+            margin: 28px 0;
         }
 
         .heroLeft {
@@ -808,21 +671,17 @@
             font-size: 1.45rem;
         }
 
-        .cart .price {
-            font-size: 22px;
-        }
-
-        .cart .add-to-cart .txt {
-            font-size: 17px;
-        }
-
         .foote_bottom_ul_amrc li a {
             margin: 0 10px;
         }
+
+        /* cache le carrousel en mobile */
+        #carouselHomePage {
+            display: none !important;
+        }
     }
 
-    /* ≤ 576px : maximum lisibilité */
-    @media (max-width: 576px) {
+    @media (max-width:576px) {
         .heroRight img {
             max-height: 700px;
             height: 700px;
@@ -864,14 +723,6 @@
             font-size: 1.55rem;
         }
 
-        .cart .price {
-            font-size: 24px;
-        }
-
-        .cart .add-to-cart .txt {
-            font-size: 18px;
-        }
-
         footer {
             padding: 20px 0 28px;
         }
@@ -886,8 +737,8 @@
         }
     }
 
-    /* accessibilité: réduire animations si demandée */
-    @media (prefers-reduced-motion: reduce) {
+    /* accessibilité */
+    @media (prefers-reduced-motion:reduce) {
 
         .logo-track,
         .logo-track2 {
@@ -907,9 +758,6 @@
 <div class="background"></div>
 
 <!-- HERO -->
-<div class="background"></div>
-
-<!-- HERO -->
 <div class="hero">
     <div class="heroLeft">
         <h1>Bienvenue sur notre boutique en ligne</h1>
@@ -921,7 +769,8 @@
         </div>
     </div>
     <div class="heroRight">
-        <div id="carouselHomePage" class="carousel slide" data-bs-ride="carousel">
+        {# visible sur desktop/tablette uniquement #}
+        <div id="carouselHomePage" class="carousel slide d-none d-md-block" data-bs-ride="carousel">
             <div class="carousel-inner">
                 {% for produit in produits %}
                 <div class="carousel-item {% if loop.first %}active{% endif %}">
@@ -1027,25 +876,28 @@
 </section>
 
 <script>
+    // Init carrousel seulement si écran >= 768px
     const myCarouselElement = document.querySelector('#carouselHomePage');
-    if (myCarouselElement) {
+    if (myCarouselElement && window.matchMedia('(min-width: 768px)').matches) {
         new bootstrap.Carousel(myCarouselElement, { interval: 3000, ride: 'carousel', touch: true });
     }
 
+    // Navigation par clic sur la card (sans intercepter les liens internes)
     document.querySelectorAll('.card').forEach(card => {
         card.addEventListener('click', (e) => {
-            if (e.target.closest('a')) return; // ne pas intercepter les liens internes
+            if (e.target.closest('a')) return;
             const url = card.dataset.url;
             if (url) window.location.href = url;
         });
     });
 
-    document.addEventListener("DOMContentLoaded", () => {
-        const cards = document.querySelectorAll(".card");
+    // Apparition des cards
+    document.addEventListener('DOMContentLoaded', () => {
+        const cards = document.querySelectorAll('.card');
         const obs = new IntersectionObserver((entries) => {
             entries.forEach(e => {
                 if (e.isIntersecting) {
-                    e.target.classList.add("visible");
+                    e.target.classList.add('visible');
                     obs.unobserve(e.target);
                 }
             });
@@ -1053,9 +905,4 @@
         cards.forEach(c => obs.observe(c));
     });
 </script>
-
-
-
-
-
 {% endblock %}

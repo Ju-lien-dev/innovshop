@@ -2,6 +2,8 @@
 parameters:
     stripe.secret_key: "%env(STRIPE_SECRET_KEY)%"
     app.admin_email: "%env(APP_ADMIN_EMAIL)%"
+    app.mail_from: "julien-dev@alwaysdata.net"
+    app.mail_from_name: "Boutique InnovShop"
 services:
     _defaults:
         autowire: true
@@ -9,3 +11,7 @@ services:
 
     App\:
         resource: "../src/"
+        exclude:
+            - "../src/DependencyInjection/"
+            - "../src/Entity/"
+            - "../src/Kernel.php"

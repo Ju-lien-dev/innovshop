@@ -108,4 +108,23 @@ class ShippingMethod
 
         return $this;
     }
+    public function getDelayAsText(): string
+    {
+        $min = $this->getMinDays();
+        $max = $this->getMaxDays();
+
+        if ($min === null && $max === null) {
+            return '—';
+        }
+        if ($min === null) {
+            return sprintf('%d j', $max);
+        }
+        if ($max === null) {
+            return sprintf('%d j', $min);
+        }
+        if ($min === $max) {
+            return sprintf('%d j', $min);
+        }
+        return sprintf('%d–%d j', $min, $max);
+    }
 }

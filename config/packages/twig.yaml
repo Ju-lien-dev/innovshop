@@ -1,5 +1,9 @@
+parameters:
+    twig_cache_dir: "/tmp/sf_twig_%kernel.environment%"
 twig:
+    default_path: "%kernel.project_dir%/templates"
     file_name_pattern: "*.twig"
+    cache: "%twig_cache_dir%"
 
 when@test:
     twig:

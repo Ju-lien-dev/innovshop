@@ -268,4 +268,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $label = trim(($this->getPrenom() ?? '') . ' ' . ($this->getNom() ?? ''));
         return $label !== '' ? $label : (string) $this->getEmail();
     }
+    public function getRolesAsText(): string
+    {
+        $labels = [
+            'ROLE_ADMIN' => 'Administrateur',
+            'ROLE_USER'  => 'Utilisateur',
+        ];
+
+        $roles = (array) $this->getRoles();
+        $pretty = array_map(fn($r) => $labels[$r] ?? $r, $roles);
+        $pretty = array_values(array_unique($pretty));
+
+        return implode(', ', $pretty);
+    }
 }

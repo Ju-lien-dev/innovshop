@@ -6,13 +6,14 @@ use App\Entity\Commande;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\DateTimeFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
@@ -36,7 +37,7 @@ class CommandeCrudController extends AbstractCrudController
                 'status',
                 'total',
                 'user.email',
-                'user.nom',
+                'user.Nom',
                 'user.prenom',
             ]);
     }
@@ -56,7 +57,9 @@ class CommandeCrudController extends AbstractCrudController
         $created = DateTimeField::new('createdAt', 'Créée le');
         $total   = TextField::new('total', 'Total (€)');
 
-        $status = ChoiceField::new('status', 'Statut')
+        /** @var ChoiceField $status */
+        $status = ChoiceField::new('status', 'Statut');
+        $status
             ->setChoices([
                 'Payée'           => 'paid',
                 'En préparation'  => 'processing',
@@ -77,12 +80,16 @@ class CommandeCrudController extends AbstractCrudController
         $user = AssociationField::new('user', 'Client');
 
         // --- Champs virtuels pour le détail ---
-        $shipping = Field::new('shippingBlock', 'Adresse de livraison')
+        /** @var Field $shipping */
+        $shipping = Field::new('shippingBlock', 'Adresse de livraison');
+        $shipping
             ->setTemplatePath('admin/fields/shipping_address.html.twig')
             ->setVirtual(true)
             ->onlyOnDetail();
 
-        $items = Field::new('itemsBlock', 'Articles commandés')
+        /** @var Field $items */
+        $items = Field::new('itemsBlock', 'Articles commandés');
+        $items
             ->setTemplatePath('admin/fields/order_items.html.twig')
             ->setVirtual(true)
             ->onlyOnDetail();
@@ -99,19 +106,22 @@ class CommandeCrudController extends AbstractCrudController
         return [$id, $ref, $created, $user, $total, $status, $shipping, $items];
     }
 
-
-    public function configureFilters(\EasyCorp\Bundle\EasyAdminBundle\Config\Filters $filters): \EasyCorp\Bundle\EasyAdminBundle\Config\Filters
+    public function configureFilters(Filters $filters): Filters
     {
+        /** @var ChoiceFilter $statusFilter */
+        $statusFilter = ChoiceFilter::new('status', 'Statut');
+        $statusFilter->setChoices([
+            'Payée'          => 'paid',
+            'En préparation' => 'processing',
+            'Expédiée'       => 'shipped',
+            'Livrée'         => 'delivered',
+            'Annulée'        => 'cancelled',
+            'Remboursée'     => 'refunded',
+        ]);
+
         return $filters
             ->add(DateTimeFilter::new('createdAt', 'Date'))
-            ->add(ChoiceFilter::new('status', 'Statut')->setChoices([
-                'Payée'          => 'paid',
-                'En préparation' => 'processing',
-                'Expédiée'       => 'shipped',
-                'Livrée'         => 'delivered',
-                'Annulée'        => 'cancelled',
-                'Remboursée'     => 'refunded',
-            ]))
+            ->add($statusFilter)
             ->add(EntityFilter::new('user', 'Client'));
     }
 }

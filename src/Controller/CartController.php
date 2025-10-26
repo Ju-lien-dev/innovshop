@@ -67,6 +67,9 @@ final class CartController extends AbstractController
                     $article->getTitre(),
                     $stockRestant
                 ));
+            } else {
+                // ✅ notif “+1” quand on peut vraiment incrémenter
+                $this->addFlash('success', sprintf('"%s" +1 dans votre panier.', $article->getTitre()));
             }
 
             $cart['quantite'][$index] = $nouvelleQuantite;
@@ -79,7 +82,10 @@ final class CartController extends AbstractController
             $cart['quantite'][]    = $quantiteInitiale;
             $cart['image'][]       = $article->getImage();
 
-            if ($stockRestant < 1) {
+            // ✅ notif “ajouté”
+            if ($quantiteInitiale > 0) {
+                $this->addFlash('success', sprintf('"%s" a bien été ajouté à votre panier.', $article->getTitre()));
+            } else {
                 $this->addFlash('warning', sprintf('Le produit "%s" n’a plus de stock disponible.', $article->getTitre()));
             }
         }
@@ -111,6 +117,7 @@ final class CartController extends AbstractController
             $session->set('panier', $cart);
         }
 
+        $this->addFlash('success', 'Article retiré du panier.');
         return $this->redirectToRoute('app_cart', [], 303);
     }
 

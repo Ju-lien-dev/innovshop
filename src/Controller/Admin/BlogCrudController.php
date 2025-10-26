@@ -8,10 +8,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 
-
-
-
-
 class BlogCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
@@ -19,22 +15,27 @@ class BlogCrudController extends AbstractCrudController
         return Blog::class;
     }
 
-
     public function configureFields(string $pageName): iterable
     {
-        return [
-            TextField::new('titre')
-                ->setColumns(9)
-                ->setRequired(true),
-            TextEditorField::new('texte')
-                ->setColumns(9)
-                ->setRequired(true),
-            ImageField::new('image')->setColumns(9)
-                ->setRequired(false)
-                ->setBasePath('images')
-                ->setUploadDir('public/images')
-                ->setHelp('Téléchargez une image pour ce blog'),
+        /** @var TextField $titre */
+        $titre = TextField::new('titre', 'Titre');
+        $titre->setColumns(9)->setRequired(true);
 
-        ];
+        /** @var TextEditorField $texte */
+        $texte = TextEditorField::new('texte', 'Texte');
+        $texte->setColumns(9)->setRequired(true);
+
+        /** @var ImageField $image */
+        $image = ImageField::new('image', 'Image');
+        $image
+            ->setColumns(9)
+            ->setRequired(false)
+            ->setBasePath('images')
+            ->setUploadDir('public/images')
+            ->setHelp('Téléchargez une image pour ce blog');
+
+        yield $titre;
+        yield $texte;
+        yield $image;
     }
 }
