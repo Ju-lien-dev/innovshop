@@ -117,12 +117,10 @@ final class StripeController extends AbstractController
         return new RedirectResponse($checkoutSession->url, 303);
     }
 
-    # ------------------------------------------------------------
-    # WEBHOOK
-    # ------------------------------------------------------------
     #[Route('/stripe/webhook', name: 'stripe_webhook', methods: ['POST'])]
     public function webhook(Request $request): Response
     {
+        // Récupération et validation de l'événement Stripe
         $payload   = (string) $request->getContent();
         $sigHeader = $request->headers->get('stripe-signature');
         $secret    = $_ENV['STRIPE_WEBHOOK_SECRET'] ?? null;
@@ -148,7 +146,6 @@ final class StripeController extends AbstractController
             $this->logger->error('Stripe webhook invalide', ['error' => $e->getMessage()]);
             return new Response('Invalid', 400);
         }
-
         $this->logger->info('Webhook: checkout.session.completed reçu', ['session_id' => $session->id ?? null]);
 
         Stripe::setApiKey($this->stripeSecret);
@@ -212,7 +209,7 @@ final class StripeController extends AbstractController
             return new Response('OK', 200);
         }
 
-        // Emails (non bloquant)
+        // Emails 
         $this->sendOrderEmailsSafely(
             commande: $commande,
             shipMeta: $shipMeta,
@@ -458,6 +455,7 @@ final class StripeController extends AbstractController
     /**
      * @param array<string, ?string> $shipMeta
      */
+
     private function sendOrderEmailsSafely(Commande $commande, array $shipMeta, string $customerEmail): void
     {
         try {

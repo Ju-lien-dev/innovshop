@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 final class CartController extends AbstractController
 {
+    // Récupération et affichage du panier dans la session 
     #[Route('/panier', name: 'app_cart', methods: ['GET'])]
     public function index(SessionInterface $session): Response
     {
@@ -27,6 +28,7 @@ final class CartController extends AbstractController
         ]);
     }
 
+    // Ajout d'un article au panier dans la session par l'id du produit
     #[Route('/panier/ajouter/{id}', name: 'app_addCart', requirements: ['id' => '\d+'], methods: ['POST', 'GET'])]
     public function addArticleToCart(
         int $id,
@@ -50,6 +52,7 @@ final class CartController extends AbstractController
 
         $stockRestant = (int) $article->getQuantiteRestante();
 
+        // Si le stock est épuisé, on ne peut pas ajouter l'article et on notifie l'utilisateur
         if ($stockRestant <= 0) {
             $this->addFlash('danger', sprintf('Le produit "%s" est en rupture de stock.', $article->getTitre()));
             return $this->redirect($request->headers->get('referer') ?? $this->generateUrl('app_catalogue'));
@@ -57,9 +60,11 @@ final class CartController extends AbstractController
 
         $index = array_search($article->getId(), $cart['id'], true);
 
+        // Si l'article est déjà dans le panier, on incrémente la quantité
         if ($index !== false) {
             $nouvelleQuantite = (int)$cart['quantite'][$index] + 1;
 
+            // Vérification du stock disponible
             if ($nouvelleQuantite > $stockRestant) {
                 $nouvelleQuantite = $stockRestant;
                 $this->addFlash('warning', sprintf(
@@ -68,12 +73,14 @@ final class CartController extends AbstractController
                     $stockRestant
                 ));
             } else {
-                // ✅ notif “+1” quand on peut vraiment incrémenter
+
+                // notif “+1” quand on peut vraiment incrémenter
                 $this->addFlash('success', sprintf('"%s" +1 dans votre panier.', $article->getTitre()));
             }
 
             $cart['quantite'][$index] = $nouvelleQuantite;
         } else {
+            // Premier ajout de l'article au panier
             $quantiteInitiale = min(1, $stockRestant);
 
             $cart['id'][]          = $article->getId();
@@ -82,7 +89,7 @@ final class CartController extends AbstractController
             $cart['quantite'][]    = $quantiteInitiale;
             $cart['image'][]       = $article->getImage();
 
-            // ✅ notif “ajouté”
+            // notif “ajouté”
             if ($quantiteInitiale > 0) {
                 $this->addFlash('success', sprintf('"%s" a bien été ajouté à votre panier.', $article->getTitre()));
             } else {
@@ -90,6 +97,7 @@ final class CartController extends AbstractController
             }
         }
 
+        // Sauvegarde du panier mis à jour dans la session
         $session->set('panier', $cart);
 
         $referer = $request->headers->get('referer');
@@ -142,12 +150,14 @@ final class CartController extends AbstractController
         $cart = $session->get('panier', []);
         $index = array_search($id, $cart['id'] ?? [], true);
 
+        // Si l'article est trouvé dans le panier, on incrémente la quantité    
         if ($index !== false) {
             $produit = $produitRepository->find($id);
+            // Vérification de l'existence du produit
             if (!$produit) {
                 throw $this->createNotFoundException('Produit introuvable.');
             }
-
+            // Vérification du stock disponible
             $stockRestant = (int) $produit->getQuantiteRestante();
             $nouvelleQuantite = (int)$cart['quantite'][$index] + 1;
 
@@ -175,6 +185,7 @@ final class CartController extends AbstractController
         $cart = $session->get('panier', []);
         $index = array_search($id, $cart['id'] ?? [], true);
 
+        // Si l'article est trouvé dans le panier, on décrémente la quantité
         if ($index !== false) {
             $cart['quantite'][$index] = max(0, (int)$cart['quantite'][$index] - 1);
 

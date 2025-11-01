@@ -332,6 +332,35 @@
     }
 
     /* ======= Overlay lisible + line-clamp standard ======= */
+    .el-wrapper:hover .h-bg {
+        left: 0;
+    }
+
+    .el-wrapper:hover .cart .add-to-cart {
+        left: 50%;
+        /* ramène le CTA au centre */
+    }
+
+    .el-wrapper:hover .cart .price {
+        left: 30%;
+        /* décale un peu le prix pour faire de la place */
+    }
+
+    /* --- Fallback pour appareils sans hover (mobiles/tablettes) --- */
+    @media (hover: none) {
+        .h-bg {
+            left: 0;
+        }
+
+        .cart .add-to-cart {
+            left: 50%;
+        }
+
+        .cart .price {
+            left: 30%;
+        }
+    }
+
     .el-wrapper .img-info {
         position: absolute;
         inset: 0;
