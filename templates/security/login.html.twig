@@ -229,6 +229,26 @@
         font-size: 12px
     }
 
+    /* 1) N’affiche que le panneau actif */
+    .login-snip .login,
+    .login-snip .sign-up-form {
+        display: none;
+    }
+
+    .login-snip .sign-in:checked~.login-space .login {
+        display: block;
+    }
+
+    .login-snip .sign-up:checked~.login-space .sign-up-form {
+        display: block;
+    }
+
+    /* 2) Sécurité : aucune checkbox visible dans le panneau Connexion */
+    .login-space .login input[type="checkbox"],
+    .login-space .login .group-check {
+        display: none !important;
+    }
+
     /* RWD */
     @media (max-width:1200px) {
         .login-snip {
@@ -391,10 +411,6 @@
 
                                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-                                <div class="group">
-                                    <input type="checkbox" id="remember_me" name="_remember_me" value="on">
-                                    <label for="remember_me">Se souvenir de moi</label>
-                                </div>
 
                                 <div class="group">
                                     <button type="submit" class="button">Se connecter</button>
