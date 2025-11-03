@@ -1,9 +1,8 @@
-{% extends '@EasyAdmin/layout.html.twig' %}
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}Dashboard{% endblock %}
 
 {% block main %}
-<h1 class="mb-4">Dashboard</h1>
-
-{# === Map de traduction des statuts === #}
 {% set STATUS_FR = {
 'paid': 'Payée',
 'processing': 'En préparation',
@@ -12,154 +11,201 @@
 'cancelled': 'Annulée'
 } %}
 
+<style>
+    .kpi-value {
+        font-weight: 700;
+        font-size: clamp(1.15rem, 3.5vw, 2rem);
+        line-height: 1.1;
+        white-space: nowrap !important;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 
-<div class="ea-content">
-    <div style="display:grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap:16px;">
-        <div style="background:#fff; border:1px solid #eee; padding:16px; border-radius:8px;">
-            <div style="font-size:12px; color:#666;">Commandes (total)</div>
-            <div style="font-size:28px; font-weight:700;">{{ metrics.orders_total }}</div>
-        </div>
-        <div style="background:#fff; border:1px solid #eee; padding:16px; border-radius:8px;">
-            <div style="font-size:12px; color:#666;">CA (total)</div>
-            <div style="font-size:28px; font-weight:700;">{{ metrics.revenue_total|number_format(2, '.', ' ') }} €</div>
-        </div>
-        <div style="background:#fff; border:1px solid #eee; padding:16px; border-radius:8px;">
-            <div style="font-size:12px; color:#666;">CA (7 jours)</div>
-            <div style="font-size:28px; font-weight:700;">{{ metrics.revenue_7d|number_format(2, '.', ' ') }} €</div>
-        </div>
-        <div style="background:#fff; border:1px solid #eee; padding:16px; border-radius:8px;">
-            <div style="font-size:12px; color:#666;">CA (30 jours)</div>
-            <div style="font-size:28px; font-weight:700;">{{ metrics.revenue_30d|number_format(2, '.', ' ') }} €</div>
-        </div>
-    </div>
+    .no-wrap {
+        white-space: nowrap !important;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 
-    <div class="mt-4" style="display:grid; grid-template-columns:1fr; gap:16px;">
-        <div style="background:#fff; border:1px solid #eee; padding:16px; border-radius:8px;">
-            <h2 style="margin:0 0 12px;">Répartition par statut</h2>
-            {% if metrics.by_status is not empty %}
-            <ul style="margin:0; padding-left:16px;">
-                {% for row in metrics.by_status %}
-                <li>
-                    <span style="display:inline-block; min-width:110px;">
-                        {{ STATUS_FR[row.status]|default(row.status|capitalize) }}
-                    </span>
-                    : <strong>{{ row.nb }}</strong>
-                </li>
-                {% endfor %}
-            </ul>
-            {% else %}
-            <em>Aucune commande pour l’instant.</em>
-            {% endif %}
-        </div>
+    #revenueChart {
+        width: 100% !important;
+        height: 100% !important;
+        display: block;
+    }
+</style>
 
-        <div style="background:#fff; border:1px solid #eee; padding:16px; border-radius:8px;">
-            <h2 style="margin:0 0 12px;">Dernières commandes</h2>
-            {% if latest is not empty %}
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Réf</th>
-                        <th>Date</th>
-                        <th>Client</th>
-                        <th>Total</th>
-                        <th>Statut</th>
-                        <th style="width:1%"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for order in latest %}
-                    <tr>
-                        <td>{{ order.reference }}</td>
-                        <td>{{ order.createdAt|date('d/m/Y H:i') }}</td>
-                        <td>
-                            {% if order.user %}
-                            {{ (order.user.prenom ~ ' ' ~ order.user.nom)|trim ?: order.user.email }}
-                            {% else %}
-                            <em>—</em>
-                            {% endif %}
-                        </td>
-                        <td>{{ order.total|number_format(2, '.', ' ') }} €</td>
-                        <td>
-                            {% set status = order.status %}
-                            <span class="badge
-                                        {% if status == 'paid' %} badge-success
-                                        {% elseif status == 'processing' %} badge-warning
-                                        {% elseif status == 'shipped' %} badge-info
-                                        {% elseif status == 'delivered' %} badge-primary
-                                        {% elseif status == 'cancelled' %} badge-danger
-                                        {% else %} badge-secondary
-                                        {% endif %}">
-                                {{ STATUS_FR[status]|default(status|capitalize) }}
-                            </span>
-                        </td>
-                        <td>
-                            {# Lien vers la page CRUD EasyAdmin de l’entité Commande #}
-                            <a class="btn btn-sm btn-primary" href="{{ ea_url()
-                                                .setController('App\\Controller\\Admin\\CommandeCrudController')
-                                                .setAction('detail')
-                                                .setEntityId(order.id)
-                                           }}">
-                                Détails
-                            </a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            {% else %}
-            <em>Aucune commande récente.</em>
-            {% endif %}
+{# ===== KPIs (100% Bootstrap, responsive) ===== #}
+<div class="container-fluid px-0">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-4 g-3">
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="text-muted small">Commandes (total)</div>
+                    <div class="kpi-value">{{ metrics.orders_total }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="text-muted small">CA (total)</div>
+                    <div class="kpi-value">
+                        {{ metrics.revenue_total|number_format(2, '.', ' ')|replace({' ': '&nbsp;'})|raw }}&nbsp;€
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="text-muted small">CA (7 jours)</div>
+                    <div class="kpi-value">
+                        {{ metrics.revenue_7d|number_format(2, '.', ' ')|replace({' ': '&nbsp;'})|raw }}&nbsp;€
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="text-muted small">CA (30 jours)</div>
+                    <div class="kpi-value">
+                        {{ metrics.revenue_30d|number_format(2, '.', ' ')|replace({' ': '&nbsp;'})|raw }}&nbsp;€
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-<section class="mb-4">
-    <h2 style="margin-bottom:.5rem;">Chiffre d’affaires – 30 derniers jours</h2>
-    <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px;height:320px;">
-        <canvas id="revenueChart" data-labels='{{ chart_labels|json_encode|e("html_attr") }}'
-            data-values='{{ chart_values|json_encode|e("html_attr") }}' height="100">
-        </canvas>
+
+{# ===== Deux colonnes responsives ===== #}
+<div class="container-fluid px-0 mt-4">
+    <div class="row g-3 row-cols-1 row-cols-lg-2">
+
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h2 class="h5 mb-3">Répartition par statut</h2>
+                    {% if metrics.by_status is not empty %}
+                    <ul class="mb-0 ps-3">
+                        {% for row in metrics.by_status %}
+                        <li class="d-flex align-items-center justify-content-between gap-2 py-1">
+                            <span class="text-muted">{{ STATUS_FR[row.status]|default(row.status|capitalize) }}</span>
+                            <strong class="no-wrap">{{ row.nb }}</strong>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <em>Aucune commande pour l’instant.</em>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-body d-flex flex-column">
+                    <h2 class="h5 mb-3">Dernières commandes</h2>
+                    {% if latest is not empty %}
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Réf</th>
+                                    <th>Date</th>
+                                    <th>Client</th>
+                                    <th class="text-end">Total</th>
+                                    <th>Statut</th>
+                                    <th style="width:1%"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in latest %}
+                                <tr>
+                                    <td class="text-nowrap">{{ order.reference }}</td>
+                                    <td class="text-nowrap">{{ order.createdAt|date('d/m/Y H:i') }}</td>
+                                    <td class="text-truncate" style="max-width:220px">
+                                        {% if order.user %}
+                                        {{ (order.user.prenom ~ ' ' ~ order.user.nom)|trim ?: order.user.email }}
+                                        {% else %}
+                                        <em>—</em>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-end no-wrap">
+                                        {{ order.total|number_format(2, '.', ' ')|replace({' ': '&nbsp;'})|raw }}&nbsp;€
+                                    </td>
+                                    <td>
+                                        {% set status = order.status %}
+                                        <span class="badge
+                          {% if status == 'paid' %} bg-success
+                          {% elseif status == 'processing' %} bg-warning text-dark
+                          {% elseif status == 'shipped' %} bg-info text-dark
+                          {% elseif status == 'delivered' %} bg-primary
+                          {% elseif status == 'cancelled' %} bg-danger
+                          {% else %} bg-secondary
+                          {% endif %}">
+                                            {{ STATUS_FR[status]|default(status|capitalize) }}
+                                        </span>
+                                    </td>
+                                    <td class="text-nowrap">
+                                        <a class="btn btn-sm btn-primary" href="{{ ea_url()
+                             .setController('App\\Controller\\Admin\\CommandeCrudController')
+                             .setAction('detail')
+                             .setEntityId(order.id) }}">
+                                            Détails
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <em>Aucune commande récente.</em>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
     </div>
-</section>
+</div>
+
+{# ===== Graph ===== #}
+<div class="container-fluid px-0 mt-4">
+    <div class="card">
+        <div class="card-body" style="height:340px;">
+            <h2 class="h5 mb-3">Chiffre d’affaires – 30 derniers jours</h2>
+            <div class="position-relative h-100">
+                <canvas id="revenueChart" class="position-absolute top-0 start-0 w-100 h-100"
+                    data-labels='{{ chart_labels|json_encode|e("html_attr") }}'
+                    data-values='{{ chart_values|json_encode|e("html_attr") }}'>
+                </canvas>
+            </div>
+        </div>
+    </div>
+</div>
 
 {# Chart.js #}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-
 <script>
     (function () {
-        var el = document.getElementById('revenueChart');
-        if (!el) { return; }
-        if (typeof Chart === 'undefined') { return; }
+        const el = document.getElementById('revenueChart');
+        if (!el || typeof Chart === 'undefined') return;
 
-        // Récupération des données depuis les data-attributes (sécurisé côté Twig)
-        var labelsJson = el.getAttribute('data-labels') || '[]';
-        var valuesJson = el.getAttribute('data-values') || '[]';
+        const labels = JSON.parse(el.dataset.labels || '[]');
+        const values = JSON.parse(el.dataset.values || '[]');
 
-        var labels;
-        var values;
-        try {
-            labels = JSON.parse(labelsJson);
-        } catch (e) {
-            labels = [];
-        }
-        try {
-            values = JSON.parse(valuesJson);
-        } catch (e) {
-            values = [];
-        }
-
-        var ctx = el.getContext('2d');
-
-        var config = {
+        new Chart(el.getContext('2d'), {
             type: 'line',
             data: {
-                labels: labels,
+                labels,
                 datasets: [{
                     label: 'CA (€) / jour',
                     data: values,
                     fill: true,
                     tension: 0.25,
-                    pointRadius: 2,
-                    borderWidth: 2
+                    borderWidth: 2,
+                    pointRadius: 2
                 }]
             },
             options: {
@@ -170,32 +216,19 @@
                     legend: { display: true },
                     tooltip: {
                         callbacks: {
-                            label: function (ctx) {
-                                var y = ctx && ctx.parsed && typeof ctx.parsed.y !== 'undefined' ? ctx.parsed.y : 0;
-                                return ' ' + Number(y).toLocaleString('fr-FR', { minimumFractionDigits: 2 }) + ' €';
-                            }
+                            label: (ctx) => ' ' + Number(ctx.parsed.y).toLocaleString('fr-FR', { minimumFractionDigits: 2 }) + ' €'
                         }
                     }
                 },
                 scales: {
                     y: {
                         beginAtZero: true,
-                        ticks: {
-                            callback: function (value) {
-                                return Number(value).toLocaleString('fr-FR') + ' €';
-                            }
-                        }
+                        ticks: { callback: v => Number(v).toLocaleString('fr-FR') + ' €' }
                     },
-                    x: {
-                        ticks: { maxRotation: 0, autoSkip: true }
-                    }
+                    x: { ticks: { maxRotation: 0, autoSkip: true } }
                 }
             }
-        };
-
-        new Chart(ctx, config);
+        });
     })();
 </script>
-
-
 {% endblock %}
